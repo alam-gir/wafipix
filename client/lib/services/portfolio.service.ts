@@ -7,7 +7,6 @@ export const getPortfolios = async () => {
 };
 
 export const getPortfolio = async (slug: string) => {
-console.log("api url from getPortfolio server : ", API_BASE_URL)
   const res = await fetch(
     `${API_BASE_URL}/portfolios/card/${slug}`
   );

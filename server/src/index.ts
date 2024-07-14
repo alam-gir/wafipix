@@ -24,6 +24,6 @@ httpServer.listen(3001, async () => {
     const mongoseInstance = await connectMongoose();
     console.log("Connected to MongoDB at : " + mongoseInstance.connection.host);
   } catch (error: any) {
-    throw new ApiError(" Failed to connect to MongoDB" + error.message, 500);
+    throw new ApiError(" Failed to connect to MongoDB " + error.message, 500);
   }
 });

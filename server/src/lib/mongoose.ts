@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config({ path: ".env" });
 
-const MONGODB_URL = process.env.MONGODB_URL!;
+const MONGODB_URL = process.env.MONGODB_URL! ;
 
 export const connectMongoose = async () => {
   try {

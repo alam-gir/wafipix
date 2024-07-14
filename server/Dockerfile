@@ -1,26 +1,28 @@
-# stage : install dependency
+# Stage : install dependency
 
-FROM node:lts As base
+FROM node:lts AS base
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY . .
 
 RUN npm install
 
+RUN npm run build
+
 COPY . .
 
-# stage : build
+# Stage : build
 
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
+COPY --from=base /app/node_modules ./node_modules/
+
 COPY --from=base /app/dist ./dist
 
-COPY package*.json ./
-
-RUN npm install
+COPY package*.json tsconfig.json ./
 
 EXPOSE 3001
 
