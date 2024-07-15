@@ -25,8 +25,8 @@ router
   .get("/reviews/featured", reviewController.getFeaturedReviews)
   .get("/reviews/:id", reviewController.getReview)
   .get("/reviews/:id/status", isLogged, adminRoute, reviewController.getStatus)
-  .post("/review", isLogged, adminRoute, reviewController.createReview)
-  .put("/reviews/:id", isLogged, adminRoute, reviewController.updateReview)
+  .post("/review", isLogged, takeUser, reviewController.createReview)
+  .put("/reviews/:id", isLogged, takeUser, reviewController.updateReview)
   .put(
     "/reviews/:id/status",
     isLogged,

@@ -40,7 +40,7 @@ const ServiceViewContainer: FC<ServiceViewContainerProps> = ({ slug }) => {
 
       {relatedPortfoliosData?.related_portfolios?.length ? (
         <RelatedProjectsCardCarousel
-          preSlug="/portfolio"
+          preSlug="/portfolios"
           slides={relatedPortfoliosData?.related_portfolios}
         />
       ) : null}

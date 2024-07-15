@@ -73,7 +73,7 @@ const HeroCarouselContentContainer: FC<HeroCarouselContentContainerProps> = ({
             <Link
               className="text-lg md:text-xl font-normal text-white hover:underline"
               style={{ color: slide?.config?.linkTextColor }}
-              href={`/portfolio/${slide?.slug}` || "/portfolio"}
+              href={`/portfolio/${slide?.slug}` || "/portfolios"}
             >
               Learn More
             </Link>

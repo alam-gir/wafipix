@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Logo from "./logo";
 import AddressBox from "../pages/contact/address-box";
-import { followLinks, navLinks } from "@/data";
+import { contactData, followLinks, navLinks } from "@/data";
 import Link from "next/link";
 import NewsletterForm from "./news-letter-form";
 import { Copyright } from "lucide-react";
@@ -17,7 +17,7 @@ const Footer: FC<footerProps> = ({}) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full w-full">
         {/* logo + addressBox */}
         <div className="">
-          <AddressBox className="text-primary-foreground" />
+          <AddressBox address={contactData.address} className="text-primary-foreground" />
         </div>
 
         {/* quick links + follo icons */}

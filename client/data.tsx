@@ -8,8 +8,8 @@ export const missionTaglineData = {
 export const videoData = {
   advertiseVideo: [
     {
-      src: "https://res.cloudinary.com/dugc533jq/video/upload/f_auto:video,q_auto/v1/wafipix/advertise-video/w70l4s2wohpgb0hjrc1z",
-      type: "video/webm",
+      src: process.env.ADDVERTISE_VIDEO_LINK as string,
+      type: process.env.ADDVERTISE_VIDEO_TYPE as string,
     }
   ],
 };
@@ -38,11 +38,11 @@ export const servicePageOverviewAndService = [
 // Contact data
 export const contactData = {
   address: {
-    country: "Bangladesh",
-    city: "Chittagong",
-    area: "Colonel Hat",
-    phone: "+8801632243382",
-    email: "wafipix1@gmail.com",
+    country: process.env.COUNTRY as string,
+    city: process.env.CITY as string,
+    area: process.env.AREA as string,
+    phone: process.env.PHONE as string,
+    email: process.env.EMAIL as string,
   },
 };
 
@@ -81,20 +81,16 @@ export const navLinks = [
 // Follow links data
 export const followLinks = [
   {
-    title: "Facebokk",
-    link: "https://www.facebook.com",
+    title: "Facebook",
+    link: process.env.FACEBOOK_PAGE_LINK as string,
   },
   {
     title: "Dribbble",
-    link: "https://www.dribbble.com",
+    link: process.env.DRIBBBLE_LINK as string,
   },
   {
-    title: "Instagram",
-    link: "https://www.instagram.com",
-  },
-  {
-    title: "LinkedIn",
-    link: "https://www.linkedin.com",
+    title: "Messenger",
+    link: process.env.FACEBOOK_MESSENGER_LINK as string,
   },
 ];
 

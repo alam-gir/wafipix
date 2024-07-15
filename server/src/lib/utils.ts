@@ -1,3 +1,11 @@
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env" });
+
+const originsStr = process.env.ORIGIN as string ;
+
+export const origns : string[] = originsStr.split(',')
+
 // get slug from string, if any . or ? or ! or , or any icon or space replace with -
 
 export const getSlug = (string: string) => {
@@ -16,3 +24,5 @@ export const bgWorker = (fn: () => Promise<any>, interval: number) => {
     console.log("background work error", error);
   }
 };
+
+

@@ -6,20 +6,35 @@ services:
     ports:
       - 3000:3000
     environment:
-      - TAWAKTO_PROPERTY_ID=663e222a07f59932ab3e35cc
-      - TAWAKTO_WIDGET_ID=1hthbaum8
+      - SERVER_BASE_URL=http://server:3001
+
+      #nextauth url
+      - NEXTAUTH_URL=https://www.wafipix.com
       - AUTH_SECRET=xMkJaZKzK36EM6W19uqt6WUUnu1+4S3hmYO5GpvQpXvq
-      - NEXTAUTH_URL=http://localhost:3000
-      - JWT_SECRET=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
-      - GITHUB_CLIENT_ID=bd0de2702eda44b09af3
-      - GITHUB_CLIENT_SECRET=58229307d67f3d8bd9f77c61b4c74179d5c2566b
-      - GOOGLE_CLIENT_ID=894245936221-vt9kgb6lsef56d2r5u1ctkq823fmf649.apps.googleusercontent.com
-      - GOOGLE_CLIENT_SECRET=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
-      - EMAIL_USER=info.alamgirhussain@gmail.com
-      - EMAIL_PASS=bmtkyzhpcdhrhbuq
-      - ADMIN_MAILS=info.alamgirhussain@gmail.com,wafipix1@gmail.com
+
+      #google console
+      - GOOGLE_CLIENT_ID=436253371960-faltkh2kfps1q7fgjtgtd1q5b0ikaq64.apps.googleusercontent.com
+      - GOOGLE_CLIENT_SECRET=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
+
+      #addresses
+      - COUNRTY=Bangladesh
+      - CITY=Chittagong
+      - AREA=Colonel Hat
+      - PHONE=+8801632243382
+      - EMAIL=wafipix1@gmail.com
+
+      #addvertise video
+      - ADDVERTISE_VIDEO_LINK=https://res.cloudinary.com/dugc533jq/video/upload/f_auto:video,q_auto/v1/wafipix/advertise-video/w70l4s2wohpgb0hjrc1z
+      - ADDVERTISE_VIDEO_TYPE=video/webm
+
+      #social media links
+      - FACEBOOK_PAGE_LINK=https://www.facebook.com
+      - DRIBBBLE_LINK=https://www.dribbble.com
+      - FACEBOOK_MESSENGER_LINK=https://www.facebook.com
+     
     depends_on:
       - server
+
     develop:
       watch: 
         - action: rebuild
@@ -36,12 +51,14 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+
     ports:
       - 3001:3001
+
     environment:
       - PORT=3001
-      - MONGODB_URL=mongodb+srv://wafipix:wafipix82@wafipix.8l5wqwk.mongodb.net/wafipixv2?retryWrites=true&w=majority&appName=wafipixv2
-      # - MONGODB_URL=mongodb://host.docker.internal:27017/wafipix
+      - ORIGIN=https://www.wafipix.com,http://localhost:3000
+      - MONGODB_URL=mongodb+srv://wafipix1:Openit420@wafipixcluster.lm4udbf.mongodb.net/wafipix?retryWrites=true&w=majority&appName=wafipixCluster
       - CLOUDINARY_CLOUD_NAME=dugc533jq
       - CLOUDINARY_API_KEY=911967824621894
       - CLOUDINARY_API_SECRET=EBzOzyWl2UfNguHh9CGqxfC4U2k
@@ -52,6 +69,7 @@ services:
       - EMAIL_USER=info.alamgirhussain@gmail.com
       - EMAIL_PASS=cbyl fmrs lifc agbt
       - CONTACT_MAIL=info.alamgirhussain@gmail.com
+
     develop:
       watch: 
         - action: rebuild

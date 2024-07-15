@@ -95,7 +95,7 @@ const HeroCarousel: React.FC<PropType> = () => {
               className="embla__slide w-full h-full p-4 md:p-8 lg:px-24 lg:py-0"
               key={index}
             >
-              <HeroCarouselContentContainer slide={slide} />
+              <HeroCarouselContentContainer slide={slide}/>
             </div>
           ))}
         </div>

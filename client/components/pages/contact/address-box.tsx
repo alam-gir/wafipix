@@ -1,18 +1,23 @@
 "use client";
 
-import { contactData } from "@/data";
 import { FC, useRef } from "react";
 
 import { variants, motion, useInView } from "@/lib/framer-motion";
 
-interface AddressBoxProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface Address {
+  country: string;
+  city: string;
+  area: string;
+  phone: string;
+  email: string;
+}
 
-const AddressBox: FC<AddressBoxProps> = ({ ...props }) => {
+interface AddressBoxProps extends React.HTMLAttributes<HTMLDivElement> {address: Address}
+
+const AddressBox: FC<AddressBoxProps> = ({ address, ...props }) => {
   const container = useRef<HTMLDivElement>(null);
 
   const isInView = useInView(container);
-
-  const address = contactData?.address;
 
   return (
     <div

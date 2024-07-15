@@ -21,7 +21,7 @@ const PortfolioView: FC<PortfolioViewProps> = ({ slug }) => {
       </section>
       {relatedPortfoliosData?.related_portfolios?.length ? (
         <RelatedProjectsCardCarousel
-          preSlug="/portfolio"
+          preSlug="/portfolios"
           slides={relatedPortfoliosData.related_portfolios}
         />
       ) : null}
