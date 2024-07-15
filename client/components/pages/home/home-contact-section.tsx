@@ -2,6 +2,7 @@ import { FC } from "react";
 import AddressBox from "../contact/address-box";
 import ContactForm from "../contact/contact-form";
 import { MotionH1 } from "@/lib/framer-motion";
+import { contactData } from "@/data";
 
 interface HomeContactSectionProps {}
 
@@ -12,7 +13,7 @@ const HomeContactSection: FC<HomeContactSectionProps> = ({}) => {
         {"Don't be shy..."}
       </MotionH1>
       <div className=" flex flex-col lg:flex-row gap-24 lg:gap-44 lg:justify-between">
-        <AddressBox />
+        <AddressBox address={contactData.address} />
         <ContactForm />
       </div>
     </div>

@@ -3,7 +3,6 @@ import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import GlobalContextProvider from "@/components/contextProvider/contextProvider";
-import TawkMessanger from "@/components/tawak-messanger/tawak-messanger";
 import { Toaster } from "@/components/ui/toaster";
 import TopLoader from "nextjs-toploader";
 import Footer from "@/components/global/footer";
@@ -13,6 +12,7 @@ import ReactQueryProvider from "@/components/providers/react-query-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import AuthFloatingButton from "@/components/auth/auth-floating-button";
+import { API_BASE_URL, SERVER_URL } from "@/lib/url";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -60,7 +60,6 @@ export default async function RootLayout({
 
                 {/* Toaster */}
                 <Toaster />
-                <TawkMessanger />
               </GlobalContextProvider>
             </ThemeProvider>
           </ReactQueryProvider>

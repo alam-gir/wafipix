@@ -1,7 +1,8 @@
 import { CorsOptions } from "cors";
+import { origns } from "./utils";
 
 export const corsOptions: CorsOptions = {
-  origin: "https://www.wafipix.com",
+  origin: origns,
   allowedHeaders:  "*",
   methods:"*",
   credentials: true,

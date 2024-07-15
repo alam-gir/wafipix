@@ -30,7 +30,7 @@ const FeaturedProjectsCardCarousel: FC<
   return (
     <div>
       <CardCarousel
-        preSlug="/portfolio"
+        preSlug="/portfolios"
         slides={data?.featuredPortfolios as unknown as CardSlide[]}
         options={{ loop: true }}
         autoplay

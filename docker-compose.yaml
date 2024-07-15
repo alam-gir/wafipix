@@ -6,15 +6,31 @@ services:
     ports:
       - 3000:3000
     environment:
-      - TAWAKTO_PROPERTY_ID=663e222a07f59932ab3e35cc
-      - TAWAKTO_WIDGET_ID=1hthbaum8
-      - AUTH_SECRET=xMkJaZKzK36EM6W19uqt6WUUnu1+4S3hmYO5GpvQpXvq
+      - SERVER_BASE_URL=http://server:3001
+
+      #nextauth url
       - NEXTAUTH_URL=https://www.wafipix.com
-      - JWT_SECRET=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
+      - AUTH_SECRET=xMkJaZKzK36EM6W19uqt6WUUnu1+4S3hmYO5GpvQpXvq
+
+      #google console
       - GOOGLE_CLIENT_ID=436253371960-faltkh2kfps1q7fgjtgtd1q5b0ikaq64.apps.googleusercontent.com
       - GOOGLE_CLIENT_SECRET=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
-      - EMAIL_USER=info.alamgirhussain@gmail.com
-      - EMAIL_PASS=bmtkyzhpcdhrhbuq
+
+      #addresses
+      - COUNRTY=Bangladesh
+      - CITY=Chittagong
+      - AREA=Colonel Hat
+      - PHONE=+8801632243382
+      - EMAIL=wafipix1@gmail.com
+
+      #addvertise video
+      - ADDVERTISE_VIDEO_LINK=https://res.cloudinary.com/dugc533jq/video/upload/f_auto:video,q_auto/v1/wafipix/advertise-video/w70l4s2wohpgb0hjrc1z
+      - ADDVERTISE_VIDEO_TYPE=video/webm
+
+      #social media links
+      - FACEBOOK_PAGE_LINK=https://www.facebook.com
+      - DRIBBBLE_LINK=https://www.dribbble.com
+      - FACEBOOK_MESSENGER_LINK=https://www.facebook.com
      
     depends_on:
       - server
@@ -41,6 +57,7 @@ services:
 
     environment:
       - PORT=3001
+      - ORIGIN=https://www.wafipix.com,http://localhost:3000
       - MONGODB_URL=mongodb+srv://wafipix1:Openit420@wafipixcluster.lm4udbf.mongodb.net/wafipix?retryWrites=true&w=majority&appName=wafipixCluster
       - CLOUDINARY_CLOUD_NAME=dugc533jq
       - CLOUDINARY_API_KEY=911967824621894
