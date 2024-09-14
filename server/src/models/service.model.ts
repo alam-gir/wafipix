@@ -1,36 +1,32 @@
 import mongoose from "mongoose";
-import { Portfolio } from "./portfolio.model";
+import { Image } from "./image.model";
 
 export interface Service extends mongoose.Document {
   title: string;
-  short_description: string;
+  tags: string[];
   description: string;
   slug: string;
-  active: boolean;
-  featured: boolean;
-  related_services: mongoose.Types.ObjectId[] | Service[];
-  related_portfolios: mongoose.Types.ObjectId[] | Portfolio[];
+  icon: Image | mongoose.Types.ObjectId;
+  image: Image | mongoose.Types.ObjectId;
+  is_active: boolean;
 }
 
 export interface ServicePopulated extends Service {
-  related_services: Service[];
-  related_portfolios: Portfolio[];
+  icon: Image;
+  image: Image;
 }
 
 const ServiceSchema = new mongoose.Schema<Service>(
   {
     title: { type: String, required: true },
-    short_description: String,
+    tags: [String],
     description: String,
     slug: { type: String, required: true },
-    active: { type: Boolean, default: true },
-    featured: { type: Boolean, default: false },
-    related_portfolios: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Portfolio" },
-    ],
-    related_services: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Service" },
-    ],
+    icon: 
+      { type: mongoose.Schema.Types.ObjectId, ref: "Image" },
+    image: 
+      { type: mongoose.Schema.Types.ObjectId, ref: "Image" },
+    is_active: { type: Boolean, default: true },
   },
   {
     timestamps: true,

@@ -1,60 +1,40 @@
 import express from "express";
 import { portfolioController } from "../controllers/portfolio/portfolio.controller";
-import { upload } from "../middlewares/multer.middleware";
-import { isLogged } from "../middlewares/isLogged";
 import { adminRoute } from "../middlewares/admin-route";
+import { upload } from "../middlewares/multer.middleware";
 
 const router = express.Router();
 
 router
-  .get("/portfolios", portfolioController.getPortfolios)
+  .get("/portfolios", portfolioController.getAll)
+  .post(
+    "/portfolios",
+    upload.single("image"),
+    adminRoute,
+    portfolioController.create
+  )
+  .get("/portfolios/:id", portfolioController.getById)
+  .get("/portfolios/findbyslug/:slug", portfolioController.getBySlug)
   .get(
-    "/portfolios/:slug/related_portfolios",
-    portfolioController.getRelatedPortfolios
+    "/portfolios/findbyserviceid/:serviceId",
+    portfolioController.getByServiceId
   )
-  .get(
-    "/portfolios/:slug/related_services",
-    portfolioController.getRelatedServices
-  )
-  .get("/portfolios/:slug/profile_image", portfolioController.getProfileImage)
-  .get("/portfolios/:slug/medias", portfolioController.getMedias)
-  .get("/portfolios/card", portfolioController.getPortfoliosForCard)
-  .get("/portfolios/card/all", portfolioController.getPortfoliosForCardAll)
-  .get("/portfolios/card/:slug", portfolioController.getPortfolio)
-  .get("/portfolios/card/:slug/texts", portfolioController.getTexts)
-  .get("/portfolios/featured", portfolioController.getFeaturedPortfolios)
-  .post("/portfolio", isLogged, adminRoute, portfolioController.createPortfolio)
-  .put(
-    "/portfolios/:id/update",
-    isLogged,
+  .patch(
+    "/portfolios/:id/update/texts",
     adminRoute,
-    portfolioController.updatePortfolio
+    portfolioController.updateTexts
   )
-  .put(
-    "/portfolios/:id/update_profile_image",
-    upload.single("profile_image"),
-    isLogged,
+  .patch(
+    "/portfolios/:id/update/image",
+    upload.single("image"),
     adminRoute,
-    portfolioController.updateProfileImage
+    portfolioController.updateImage
   )
-  .put(
-    "/portfolios/:id/add_media",
-    upload.single("media"),
-    isLogged,
+  .patch(
+    "/portfolios/:id/update/service",
     adminRoute,
-    portfolioController.updatePortfolioMedia.add
+    portfolioController.updateService
   )
-  .delete(
-    "/portfolios/:id/remove_media",
-    isLogged,
-    adminRoute,
-    portfolioController.updatePortfolioMedia.remove
-  )
-  .delete(
-    "/portfolios/:id",
-    isLogged,
-    adminRoute,
-    portfolioController.deletePortfolio
-  );
+  .delete("/portfolios/:id", adminRoute, portfolioController.delete);
 
 export default router;

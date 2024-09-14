@@ -1,21 +1,19 @@
-import { ReviewForCard } from "@/types/types";
 import { create } from "zustand";
 
+interface User {
+  accessToken: string;
+  email: string;
+  image: string;
+  name: string;
+  role: string;
+}
 type Store = {
-  isOpenAddReviewForm: boolean;
-  setOpenAddReviewForm: (value: boolean) => void;
+  user: User | null;
 
-  review: ReviewForCard | null;
-  setReview: (review: ReviewForCard) => void;
-  clearReview: () => void;
+  setUser: (user: User) => void;
 };
 
 export const useStore = create<Store>()((set) => ({
-  isOpenAddReviewForm: false,
-  setOpenAddReviewForm: (value: boolean) =>
-    set(() => ({ isOpenAddReviewForm: value })),
-
-  review: null,
-  setReview: (review?: ReviewForCard) => set({ review: review }),
-  clearReview: () => set({ review: null }),
+  user: null,
+  setUser: (user) => set({ user }),
 }));

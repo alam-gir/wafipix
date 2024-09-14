@@ -4,13 +4,13 @@ import http from "http";
 import { app } from "./app/app";
 import { ApiError } from "../src/lib/custom-api-error-class";
 import { connectMongoose } from "../src/lib/mongoose";
-import { origns } from "./lib/utils";
+import { origins } from "./lib/utils";
 
 const httpServer = http.createServer(app);
 
 export const io = new Server(httpServer, {
   cors: {
-    origin: origns,
+    origin: origins,
   },
   transports: ["websocket", "polling"],
 });

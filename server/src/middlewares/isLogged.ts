@@ -2,8 +2,9 @@ import { NextFunction, Response } from "express";
 import { decodeJWT } from "../lib/decode-jwt-token";
 import { ApiError } from "../lib/custom-api-error-class";
 import { RequestWithUser } from "../../types/types";
+import { UserModel } from "../models/user.model";
 
-export const isLogged = (
+export const isLogged = async (
   req: RequestWithUser | any,
   res: Response,
   next: NextFunction
@@ -12,9 +13,17 @@ export const isLogged = (
   if (!accessToken) throw new ApiError("token not found!", 404);
   const decode = decodeJWT(accessToken);
 
-  if (!decode) throw new ApiError("Unauthorized", 401);
+  try {
+    const userSub = decode.userSub;
 
-  req.userSub = decode.sub;
+    const isExist = await UserModel.findOne({ sub: userSub }).exec();
 
-  next();
+    if (!isExist) throw new ApiError("Unauthenticated!", 401);
+
+    req.user = { ...isExist.toObject() } as any;
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

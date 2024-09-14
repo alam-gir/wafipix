@@ -1,205 +1,141 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../../middlewares/async-handler";
 import { ApiError } from "../../lib/custom-api-error-class";
-import {
-  addRelatedPortfoliosToService,
-  addRelatedServicesToService,
-  createInitialService,
-  removeRelatedPortfolioFromService,
-  removeRelatedServiceFromService,
-  removeService,
-  updateServiceTexts,
-} from "./service-helper-function";
-import { ServiceModel } from "../../models/service.model";
-import { getServiceAggregation } from "./service-aggregation";
-import { getServiceAggregationToView } from "./service-aggregation-to-view";
-import { getServiceAggregationToCardView } from "./service-aggregation-to-card-view";
-import { ObjectId } from "mongoose";
-import { getServiceAggregationForRelatedPortfolios } from "./service-aggregation-for-related-portfolios";
-import { PortfolioModel } from "../../models/portfolio.model";
-import { getServiceAggregationTexts } from "./service-aggregation-texts";
-import { getServiceAggregationForRelatedServices } from "./service-aggregation-for-related-services";
+import { Service_Service } from "../../services/service.service";
 
 export const serviceController = {
-  getServices: asyncHandler(async (req: Request, res: Response) => {
+  getAll: asyncHandler(async (req: Request, res: Response) => {
+    const { limit, page, filter, sort, populate, q } = req.query as {
+      limit: string;
+      page: string;
+      populate: string;
+      filter: "all" | "active" | "inactive";
+      sort: "asc" | "desc";
+      q: string;
+    };
+    const services = await Service_Service.getAll({
+      limit: parseInt(limit),
+      page: parseInt(page),
+      populate,
+      filter,
+      sort,
+      q,
+    });
 
-    // find if cache is null
-    const services = await ServiceModel.aggregate(
-      getServiceAggregation(req)
-    ).exec();
-
-    res.status(200).json({ success: true, services });
-
+    return res.status(200).json(services);
   }),
 
-  getService: asyncHandler(async (req: Request, res: Response) => {
-    const query = req.query;
-    const queryKeys = Object.keys(query);
-    const contains =
-      queryKeys.includes("match_id") ||
-      (queryKeys.includes("match_field") && queryKeys.includes("match_value"));
-
-    if (!contains)
-      throw new ApiError(
-        "Need match_id or match_field, match_value as query",
-        404
-      );
-
-    const service = (
-      await ServiceModel.aggregate(
-        getServiceAggregation(req, { single: true })
-      ).exec()
-    )[0];
-
-    if (!service) throw new ApiError("Service not found!", 404);
-
-    res.status(200).json({ success: true, service });
-
-  }),
-
-  getServiceToView: asyncHandler(async (req: Request, res: Response) => {
-    const service = (
-      await ServiceModel.aggregate(getServiceAggregationToView(req))
-    )[0];
-
-    res.status(200).json({ success: true, service });
-  }),
-
-  getServiceTexts: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params as { slug: string };
-
-    const service = (
-      await ServiceModel.aggregate(getServiceAggregationTexts(slug))
-    )[0];
-
-    res.status(200).json({ success: true, service });
-  }),
-
-  getServiceToCardView: asyncHandler(async (req: Request, res: Response) => {
-    const services = await ServiceModel.aggregate(
-      getServiceAggregationToCardView()
-    );
-
-    res.status(200).json({ success: true, services });
-  }),
-
-  getrelatedPortfolios: asyncHandler(async (req: Request, res: Response) => {
+  getBySlug: asyncHandler(async (req: Request, res: Response) => {
     const { slug } = req.params;
-    const isExist = await ServiceModel.findOne({ slug });
-    if (!isExist) throw new ApiError("Service not found!", 404);
 
-    const related_portfolio_ids = isExist.related_portfolios;
-    if (!related_portfolio_ids.length)
-      return res.status(200).json({ success: true, related_portfolios: [] });
+    const service = await Service_Service.getBySlug(slug);
 
-    const related_portfolios = await PortfolioModel.aggregate(
-      getServiceAggregationForRelatedPortfolios({
-        related_portfolio_ids: related_portfolio_ids as unknown as ObjectId[],
-      })
-    );
-    res.status(200).json({ success: true, related_portfolios });
+    return res.status(200).json(service);
   }),
 
-  getrelatedServices: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    const isExist = await ServiceModel.findOne({ slug });
-    if (!isExist) throw new ApiError("Service not found!", 404);
+  getById: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
 
-    const related_services_ids = isExist.related_services;
-    if (!related_services_ids.length)
-      return res.status(200).json({ success: true, related_services: [] });
+    const service = await Service_Service.getById(id);
 
-    const related_services = await ServiceModel.aggregate(
-      getServiceAggregationForRelatedServices({
-        related_service_ids: related_services_ids as unknown as ObjectId[],
-      })
-    );
-    res.status(200).json({ success: true, related_services });
+    return res.status(200).json(service);
   }),
 
-  createService: asyncHandler(async (req: Request, res: Response) => {
-    const { title } = req.body;
+  create: asyncHandler(async (req: Request, res: Response) => {
+    const { title, tags, description } = req.body as {
+      title: string;
+      tags: string[];
+      description: string;
+    };
+
+    const { icon, image } = req.files as unknown as {
+      icon: Express.Multer.File[];
+      image: Express.Multer.File[];
+    };
+
+    let iconSingle = icon?.length > 0 ? icon[0] : undefined;
+    let imageSingle = image?.length > 0 ? image[0] : undefined;
+
+    if (!imageSingle) throw new ApiError("Image is Required.", 404);
+
+    if (!iconSingle) throw new ApiError("Icon is Required.", 404);
+
     if (!title) throw new ApiError("Title is Required.", 404);
 
-    const service = await createInitialService(title);
+    const service = await Service_Service.create({
+      title,
+      tags : tags || [],
+      icon: iconSingle,
+      image: imageSingle,
+      description,
+    });
 
     res.status(201).json({ success: true, service });
   }),
 
-  updateService: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    const { type } = req.query;
-    const { title, short_description, description, active, featured } =
-      req.body;
-
-    if (!slug) throw new ApiError("Service slug is required.", 404);
-    if (!type) throw new ApiError("Type is required.", 404);
-
-    const isExist = await ServiceModel.findOne({ slug })
-      .select(["slug"])
-      .exec();
-
-    if (!isExist) throw new ApiError("Service not found!", 404);
-
-    let updatedservice: any;
-    
-    switch (type) {
-      case "texts":
-        updatedservice = await updateServiceTexts({
-          id: isExist._id as string,
-          title,
-          short_description,
-          description,
-          active,
-          featured,
-        });
-        break;
-
-      case "add_related_services":
-        updatedservice = await addRelatedServicesToService({
-          id: isExist._id as string,
-          related_service_ids: req.body.related_service_ids,
-        });
-        break;
-
-      case "remove_related_service":
-        updatedservice = await removeRelatedServiceFromService({
-          id: isExist._id as string,
-          related_service_id: req.body.related_service_id,
-        });
-        break;
-
-      case "add_related_portfolios":
-        updatedservice = await addRelatedPortfoliosToService({
-          id: isExist._id as string,
-          related_portfolio_ids: req.body.related_portfolio_ids,
-        });
-        break;
-
-      case "remove_related_portfolio":
-        updatedservice = await removeRelatedPortfolioFromService({
-          id: isExist._id as string,
-          related_portfolio_id: req.body.related_portfolio_id,
-        });
-        break;
-
-      default:
-        throw new ApiError("Invalid type", 404);
-    }
-
-    if (!updatedservice) throw new ApiError("Service update failed!", 404);
-
-    res.status(200).json({ success: true, service: updatedservice });
-
-  }),
-
-  deleteService: asyncHandler(async (req: Request, res: Response) => {
+  updateTexts: asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
 
-    const deletedService = await removeService(id);
+    const { title, tags, description } = req.body as {
+      title: string;
+      tags: string[];
+      description: string;
+    };
 
-    if (!deletedService) throw new ApiError("Service not found!", 404);
+    if (!id) throw new ApiError("Id is Required.", 404);
+    if (!title) throw new ApiError("Title is Required.", 404);
+    if (!description) throw new ApiError("Description is Required.", 404);
 
-    res.status(200).json({ success: true, service: deletedService });
+    const service = await Service_Service.updateTexts(id, {
+      title,
+      tags: tags || [],
+      description,
+    });
+
+    res.status(200).json({ success: true, service });
+  }),
+
+  updateImage: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const image = req.file as Express.Multer.File;
+
+    const serviceImage = await Service_Service.updateImage(id, { image });
+
+    res.status(200).json({ success: true, serviceImage });
+  }),
+
+  updateIcon: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const icon = req.file as Express.Multer.File;
+
+    const serviceIcon = await Service_Service.updateIcon(id, { icon });
+
+    res.status(200).json({ success: true, serviceIcon });
+  }),
+
+  updateActiveStatus: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const { is_active } = req.body as {
+      is_active: boolean;
+    };
+
+    const service = await Service_Service.updateActiveStatus(id, { is_active });
+
+    res.status(200).json({ success: true, service });
+  }),
+
+  delete: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const service = await Service_Service.deleteById(id);
+
+    res.status(200).json({ success: true, service });
   }),
 };

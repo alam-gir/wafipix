@@ -54,6 +54,18 @@ const config = {
         articlePara: "1.125rem",
         articleParaMd: "1.2rem",
         articleParaLg: "1.3",
+
+        bigHead: "3rem",
+        bigHeadLg: "5rem",
+
+        head: "2rem",
+        headLg: "3rem",
+
+        subHead: "1rem",
+        subHeadLg: "1.25rem",
+
+        cardHead: "1.25rem",
+        cardHeadLg: "1.5rem",
       },
       minHeight: {
         fullScreenWithoutNavbar: "calc(100vh - 64px)",
@@ -64,6 +76,8 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        background2: "hsl(var(--background2))",
+        foreground2: "hsl(var(--foreground2))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -87,6 +101,14 @@ const config = {
         accent2: {
           DEFAULT: "hsl(var(--accent2))",
           foreground: "hsl(var(--accent2-foreground))",
+        },
+        accent3: {
+          DEFAULT: "hsl(var(--accent3))",
+          foreground: "hsl(var(--accent3-foreground))",
+        },
+        accent4: {
+          DEFAULT: "hsl(var(--accent4))",
+          foreground: "hsl(var(--accent4-foreground))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",

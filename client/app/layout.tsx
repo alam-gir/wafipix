@@ -1,22 +1,19 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import GlobalContextProvider from "@/components/contextProvider/contextProvider";
 import { Toaster } from "@/components/ui/toaster";
 import TopLoader from "nextjs-toploader";
 import Footer from "@/components/global/footer";
-import NavBox from "@/components/global/nav/nav-box";
-import Header from "@/components/global/header";
 import ReactQueryProvider from "@/components/providers/react-query-provider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import AuthFloatingButton from "@/components/auth/auth-floating-button";
-import { API_BASE_URL, SERVER_URL } from "@/lib/url";
+import Navbar from "@/components/global/nav/navbar";
+import ClientSessionProvider from "@/components/hooks/client-session-provider";
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  fallback: ["sans-serif"],
 });
 
 export const metadata: Metadata = {
@@ -34,34 +31,29 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={spaceGrotesk.className}>
+      <body className={`${inter.className} h-fit bg-background2`}>
         <SessionProvider session={session}>
           <ReactQueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <GlobalContextProvider>
+            <ClientSessionProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
                 <TopLoader height={5} color="#5025D0" />
+                
+                <Navbar />
 
-                <NavBox />
-                <AuthFloatingButton session={session} />
-
-                <Header />
-
-                <main className="min-h-fullScreenWithoutNavbar">
-                  {children}
-                </main>
+                {children}
 
                 {/* footer */}
                 <Footer />
 
                 {/* Toaster */}
                 <Toaster />
-              </GlobalContextProvider>
-            </ThemeProvider>
+              </ThemeProvider>
+            </ClientSessionProvider>
           </ReactQueryProvider>
         </SessionProvider>
       </body>

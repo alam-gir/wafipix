@@ -1,399 +1,138 @@
 import { Request, Response } from "express";
-import { ApiError } from "../../lib/custom-api-error-class";
-import {
-  addPortfolioMedia,
-  addRelatedPortfoliosToPortfolio,
-  addRelatedServicesToPortfolio,
-  createInitialPortfolio,
-  deletePortfolio,
-  removePortfolioMedia,
-  removeRelatedPortfolioFromPortfolio,
-  removeRelatedServiceFromPortfolio,
-  updatePortfolioTexts,
-} from "./portfolio-helper-functions";
 import { asyncHandler } from "../../middlewares/async-handler";
-import { PortfolioModel } from "../../models/portfolio.model";
-import { getPortfolioAggregation } from "./portfolio-aggregation";
-import { getPortfolioAggregationFeatured } from "./get-portfolio-aggregation-featured";
-import { getPortfoliosAggregationForCard } from "./get-portfolio-aggregation-for-card";
-import { getPortfolioAggregationForRelatedPortfolios } from "./get-portfolio-aggregation-for-related-portfolios";
-import { ObjectId } from "mongoose";
-import { ServiceModel } from "../../models/service.model";
-import { getServiceAggregationToGetServicesByIdsForCard } from "../service/service-aggregation-to-get-services-by-ids-for-card";
-import shortId from "shortid";
-import { bgWorker } from "../../lib/utils";
-import { bg_works_update_portfolio_image } from "./bg-works/upload-portfolio-profile-image";
+import { ApiError } from "../../lib/custom-api-error-class";
+import { Portfolio_Service } from "../../services/portfolio.service";
 
 export const portfolioController = {
-  getPortfolios: asyncHandler(async (req: Request, res: Response) => {
+  getAll: asyncHandler(async (req: Request, res: Response) => {
+    const { limit, page, sort, populate, q } = req.query as {
+      limit: string;
+      page: string;
+      populate: string;
+      sort: "asc" | "desc";
+      q: string;
+    };
 
-    const portfolios = await PortfolioModel.aggregate(
-      getPortfolioAggregation(req)
-    ).exec();
+    const portfolios = await Portfolio_Service.getAll({
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+      sort: sort as any,
+      populate,
+      q,
+    });
 
-    res.status(200).json({ success: true, portfolios });
-
+    return res.status(200).json(portfolios);
   }),
 
-  getPortfolio: asyncHandler(async (req: Request, res: Response) => {
+  getBySlug: asyncHandler(async (req: Request, res: Response) => {
     const { slug } = req.params;
-    if (!slug) throw new ApiError("Slug is required!", 404);
 
-    const portfolio = await PortfolioModel.findOne({ slug }).exec();
+    const portfolio = await Portfolio_Service.getBySlug(slug);
 
-    if (!portfolio) throw new ApiError("No portfolio found!", 404);
+    return res.status(200).json(portfolio);
+  }),
+
+  getById: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    const portfolio = await Portfolio_Service.getById(id);
+
+    return res.status(200).json(portfolio);
+  }),
+
+  getByServiceId: asyncHandler(async (req: Request, res: Response) => {
+    const { serviceId } = req.params;
+
+    const { limit, page, sort, populate, q } = req.query as {
+      limit: string;
+      page: string;
+      populate: string;
+      sort: "asc" | "desc";
+      q: string;
+    };
+    
+    if (!serviceId) throw new ApiError("Service Id is Required.", 404);
+
+    const portfolios = await Portfolio_Service.getByServiceId(serviceId, {
+      page: parseInt(page as string),
+      limit: parseInt(limit as string),
+      sort: sort as any,
+      populate,
+      q,
+    });
+
+    res.status(200).json(portfolios);
+  }),
+
+  create: asyncHandler(async (req: Request, res: Response) => {
+    const { title, tags, serviceId } = req.body as {
+      title: string;
+      tags: string[];
+      serviceId: string;
+    };
+
+    const image = req.file as unknown as Express.Multer.File;
+
+    if (!title) throw new ApiError("Title is Required.", 404);
+    if (!serviceId) throw new ApiError("Service Id is Required.", 404);
+
+    const portfolio = await Portfolio_Service.create({
+      title,
+      tags,
+      image,
+      serviceId,
+    });
+
+    res.status(201).json({ success: true, portfolio });
+  }),
+
+  updateTexts: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const { title, tags } = req.body as {
+      title: string;
+      tags: string[];
+    };
+
+    const portfolio = await Portfolio_Service.updateTexts(id, {
+      title,
+      tags: tags || [],
+    });
 
     res.status(200).json({ success: true, portfolio });
   }),
 
-  getTexts: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    if (!slug) throw new ApiError("Slug is required!", 404);
+  updateImage: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
 
-    const portfolio = (
-      await PortfolioModel.aggregate([
-        {
-          $match: {
-            slug,
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            title: 1,
-            short_description: 1,
-            description: 1,
-            featured: 1,
-            active: 1,
-          },
-        },
-      ]).exec()
-    )[0];
+    const image = req.file as Express.Multer.File;
 
-    if (!portfolio) throw new ApiError("No portfolio found!", 404);
+    const portfolioImage = await Portfolio_Service.updateImage(id, { image });
+
+    res.status(200).json({ success: true, portfolioImage });
+  }),
+
+  updateService: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
+
+    const { serviceId } = req.body as {
+      serviceId: string;
+    };
+
+    const portfolio = await Portfolio_Service.updateService(id, { serviceId });
 
     res.status(200).json({ success: true, portfolio });
   }),
-  getProfileImage: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    if (!slug) throw new ApiError("Slug is required!", 404);
 
-    const portfolio = (
-      await PortfolioModel.aggregate([
-        { $match: { slug } },
-        {
-          $lookup: {
-            from: "media",
-            localField: "profile_image",
-            foreignField: "_id",
-            as: "profile_image",
-          },
-        },
-        {
-          $addFields: {
-            profile_image: {
-              $arrayElemAt: ["$profile_image", 0],
-            },
-          },
-        },
-        {
-          $project: {
-            profile_image: 1,
-          },
-        },
-      ])
-    )[0];
+  delete: asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    if (!id) throw new ApiError("Id is Required.", 404);
 
-    if (!portfolio) throw new ApiError("Portfolio not found!", 404);
-    const profile_image = portfolio?.profile_image;
+    const portfolio = await Portfolio_Service.deleteById(id);
 
-    res.status(200).json({ success: true, profile_image });
-  }),
-
-  getMedias: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    if (!slug) throw new ApiError("Slug is required!", 404);
-
-    const portfolio = (
-      await PortfolioModel.aggregate([
-        {
-          $match: {
-            slug,
-          },
-        },
-        {
-          $lookup: {
-            from: "media",
-            localField: "medias.media",
-            foreignField: "_id",
-            as: "temp_medias",
-          },
-        },
-        {
-          $addFields: {
-            medias: {
-              $map: {
-                input: "$medias",
-                as: "mediaItem",
-                in: {
-                  _id: "$$mediaItem._id",
-                  view_size: "$$mediaItem.view_size",
-                  media: {
-                    $arrayElemAt: [
-                      {
-                        $filter: {
-                          input: "$temp_medias",
-                          as: "tempMediaItem",
-                          cond: {
-                            $eq: ["$$mediaItem.media", "$$tempMediaItem._id"],
-                          },
-                        },
-                      },
-                      0,
-                    ],
-                  },
-                },
-              },
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            medias: 1,
-          },
-        },
-      ]).exec()
-    )[0];
-
-    if (!portfolio) throw new ApiError("No portfolio found!", 404);
-
-    res.status(200).json({ success: true, medias: portfolio.medias });
-  }),
-
-  getPortfoliosForCard: asyncHandler(async (req: Request, res: Response) => {
-    const portfolios = await PortfolioModel.aggregate(
-      getPortfoliosAggregationForCard()
-    );
-
-    res.status(200).json({ success: true, portfolios });
-  }),
-
-  getPortfoliosForCardAll: asyncHandler(async (req: Request, res: Response) => {
-    const portfolios = await PortfolioModel.aggregate([
-      {
-        $match: {},
-      },
-      {
-        $sort: { createdAt: -1 },
-      },
-      {
-        $lookup: {
-          from: "media",
-          localField: "profile_image",
-          foreignField: "_id",
-          as: "profile_image",
-        },
-      },
-      {
-        $unwind: { path: "$profile_image", preserveNullAndEmptyArrays: true },
-      },
-      {
-        $addFields: {
-          image_url: "$profile_image.secure_url",
-        },
-      },
-      {
-        $project: { _id: 1, title: 1, slug: 1, image_url: 1 },
-      },
-    ]);
-
-    res.status(200).json({ success: true, portfolios });
-  }),
-
-  getFeaturedPortfolios: asyncHandler(async (req: Request, res: Response) => {
-    const featuredPortfolios = await PortfolioModel.aggregate(
-      getPortfolioAggregationFeatured(req)
-    );
-
-    res.status(200).json({ success: true, featuredPortfolios });
-  }),
-
-  getRelatedServices: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    const isExist = await PortfolioModel.findOne({ slug });
-    if (!isExist) throw new ApiError("Portfolio not found!", 404);
-
-    const related_service_ids = isExist.related_services;
-    if (!related_service_ids.length)
-      return res.status(200).json({ success: true, related_services: [] });
-
-    const related_services = await ServiceModel.aggregate(
-      getServiceAggregationToGetServicesByIdsForCard({
-        service_ids: related_service_ids as unknown as ObjectId[],
-      })
-    );
-    res.status(200).json({ success: true, related_services });
-  }),
-
-  getRelatedPortfolios: asyncHandler(async (req: Request, res: Response) => {
-    const { slug } = req.params;
-    const isExist = await PortfolioModel.findOne({ slug });
-    if (!isExist) throw new ApiError("Portfolio not found!", 404);
-
-    const related_portfolio_ids = isExist.related_portfolios;
-    if (!related_portfolio_ids.length)
-      return res.status(200).json({ success: true, related_portfolios: [] });
-
-    const related_portfolios = await PortfolioModel.aggregate(
-      getPortfolioAggregationForRelatedPortfolios({
-        related_portfolio_ids: related_portfolio_ids as unknown as ObjectId[],
-      })
-    );
-    res.status(200).json({ success: true, related_portfolios });
-  }),
-
-  createPortfolio: asyncHandler(async (req: Request, res: Response) => {
-    const { title } = req.body;
-
-    const portfolio = await createInitialPortfolio(title);
-
-    if (!portfolio) throw new ApiError("Failed to create portfolio.", 404);
-
-    res.status(201).json({ portfolio });
-  }),
-
-  updatePortfolio: asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params as { id: string };
-
-    const { type } = req.query as { type: string };
-
-    if (!id) throw new ApiError("Id is required.", 404);
-    if (!type) throw new ApiError("Type is required.", 404);
-
-    const isExist = await PortfolioModel.findById(id)
-      .select(["title", "slug"])
-      .exec();
-
-    if (!isExist) throw new ApiError("Portfolio not found!", 404);
-
-    let updatedPortfolio: any;
-
-    switch (type) {
-      case "texts":
-        updatedPortfolio = await updatePortfolioTexts({
-          id,
-          title: req.body.title,
-          description: req.body.description,
-          short_description: req.body.short_description,
-          featured: req.body.featured,
-          active: req.body.active,
-        });
-        break;
-
-      case "add_related_portfolios":
-        updatedPortfolio = await addRelatedPortfoliosToPortfolio({
-          id,
-          related_portfolio_ids: req.body.related_portfolio_ids as string[],
-        });
-        break;
-
-      case "remove_related_portfolio":
-        updatedPortfolio = await removeRelatedPortfolioFromPortfolio({
-          id,
-          related_portfolio_id: req.body.related_portfolio_id as string,
-        });
-        break;
-
-      case "add_related_services":
-        updatedPortfolio = await addRelatedServicesToPortfolio({
-          id,
-          related_service_ids: req.body.related_service_ids as string[],
-        });
-        break;
-
-      case "remove_related_service":
-        updatedPortfolio = await removeRelatedServiceFromPortfolio({
-          id,
-          related_service_id: req.body.related_service_id as string,
-        });
-        break;
-
-      default:
-        throw new ApiError("Invalid field.", 404);
-    }
-
-    if (!updatedPortfolio)
-      throw new ApiError("Failed to update portfolio.", 404);
-
-    res.status(200).json({ success: true });
-
-  }),
-
-  updateProfileImage: asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params as { id: string };
-    const profile_image = req.file;
-
-    if (!id) throw new ApiError("Portfolio id required!", 404);
-    if (!profile_image) throw new ApiError("Profile image required!", 404);
-
-    const isExist = await PortfolioModel.findById(id);
-
-    if (!isExist) throw new ApiError("Portfolio not found!", 404);
-
-    const jobId = shortId.generate();
-
-    bgWorker(
-      async () =>
-        await bg_works_update_portfolio_image({
-          portfolio_id: id,
-          profile_image,
-          jobId,
-        }),
-      200
-    );
-
-    res.status(200).json({ success: true, jobId });
-
-  }),
-
-  updatePortfolioMedia: {
-    add: asyncHandler(async (req: Request, res: Response) => {
-      const { id } = req.params;
-      const { view_size } = req.body as {
-        view_size: "full" | "half" | "quarter" | "three-fourth";
-      };
-      const { file } = req;
-
-      const jobId = await addPortfolioMedia({
-        id,
-        media: file,
-        view_size,
-      });
-
-      res.status(200).json({ success: true, jobId });
-    }),
-
-    remove: asyncHandler(async (req: Request, res: Response) => {
-      const { id } = req.params;
-      const { medias_item_id } = req.body as { medias_item_id: string };
-
-      await removePortfolioMedia({
-        id,
-        medias_item_id,
-      });
-
-      res.status(200).json({ success: true });
-    }),
-  },
-
-  deletePortfolio: asyncHandler(async (req: Request, res: Response) => {
-    const deletedPortfolio = await deletePortfolio(req.params.id);
-
-    if (!deletedPortfolio)
-      throw new ApiError("Failed to delete portfolio.", 404);
-
-    res.status(200).json({ portfolio: deletedPortfolio });
-
+    res.status(200).json({ success: true, portfolio });
   }),
 };
