@@ -1,33 +1,45 @@
 import { Router } from "express";
 import { serviceController } from "../controllers/service/service.controller";
-import { isLogged } from "../middlewares/isLogged";
 import { adminRoute } from "../middlewares/admin-route";
+import { upload } from "../middlewares/multer.middleware";
 
 const router = Router();
 
 router
-  .get("/services", serviceController.getServices)
-  .get("/services/view/card", serviceController.getServiceToCardView)
-  .get("/services/:slug/view", serviceController.getServiceToView)
-  .get("/services/:slug/texts", serviceController.getServiceTexts)
-  .get(
-    "/services/:slug/related_portfolios",
-    serviceController.getrelatedPortfolios
+  .get("/services", serviceController.getAll)
+  .get("/services/findbyslug/:slug", serviceController.getBySlug)
+  .get("/services/:id", serviceController.getById)
+  .post(
+    "/services",
+     adminRoute,
+    upload.fields([{name: "icon", maxCount: 1}, {name: "image", maxCount: 1}]),
+    serviceController.create
   )
-  .get("/services/:slug/related_services", serviceController.getrelatedServices)
-  .get("/service", serviceController.getService)
-  .post("/service", isLogged, adminRoute, serviceController.createService)
-  .put(
-    "/services/:slug/update",
-    isLogged,
-    adminRoute,
-    serviceController.updateService
+
+  .patch(
+    "/services/:id/update/texts",
+     adminRoute,
+    serviceController.updateTexts
   )
-  .delete(
-    "/services/:id",
-    isLogged,
-    adminRoute,
-    serviceController.deleteService
-  );
+  .patch(
+    "/services/:id/update/image",
+    upload.single("image"),
+     adminRoute,
+    serviceController.updateImage
+  )
+  .patch(
+    "/services/:id/update/icon",
+    upload.single("icon"),
+     adminRoute,
+    serviceController.updateIcon
+  )
+  .patch(
+    "/services/:id/update/active-status",
+    // adminRoute,
+    serviceController.updateActiveStatus
+  )
+  .delete("/services/:id", 
+    // adminRoute,
+     serviceController.delete);
 
 export default router;

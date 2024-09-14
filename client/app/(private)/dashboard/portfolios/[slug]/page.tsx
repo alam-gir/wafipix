@@ -1,20 +1,21 @@
-import PortfolioViewAdmin from "@/app/(private)/_components/page/portfolio/portfolio-view-admin";
-import SectionSeparator from "@/components/global/section-separator";
 import { FC } from "react";
+import PageHeader from "../../../_components/page-header";
+import SectionSeparator from "@/components/global/section-separator";
+import PortfolioFormContainer from "@/app/(private)/_components/portfolio/portfolio-form-container";
 
-interface pageProps {
+interface PortfolioViewProps {
   params: { slug: string };
 }
 
-const page: FC<pageProps> = ({ params }) => {
+const PortfolioView: FC<PortfolioViewProps> = ({ params }) => {
   const { slug } = params;
-
   return (
     <div>
-      <PortfolioViewAdmin slug={slug} />
-      <SectionSeparator />
+      <PageHeader title="Portfolio" description="Modify your portfolio" />
+      <SectionSeparator className="min-h-6 lg:min-h-6" />
+      <PortfolioFormContainer slug={slug} />
     </div>
   );
 };
 
-export default page;
+export default PortfolioView;

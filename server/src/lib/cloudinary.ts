@@ -23,11 +23,9 @@ cloudinary.config({
 export const uploadFileToCloudinary = ({
   file,
   folder,
-  progress_event_name,
 }: {
   file: Express.Multer.File | undefined;
   folder: string;
-  progress_event_name: string;
 }) => {
   if (!file) throw new Error("File is required.");
 
@@ -41,24 +39,24 @@ export const uploadFileToCloudinary = ({
         }
       );
 
-      let writeBytes = 0;
+      // let writeBytes = 0;
       let chunkSize = 100;
-      const totalBytes = file.size;
+      // const totalBytes = file.size;
 
       const readStream = new Readable();
 
-      for (let i = 0; i < file.buffer.length; i = i + chunkSize) {
+      for (let i = 0; i < file?.buffer?.length; i = i + chunkSize) {
         readStream.push(file.buffer.subarray(i, i + chunkSize));
       }
 
       readStream.push(null);
 
-      readStream.on("data", (chunk) => {
-        writeBytes += chunk.length;
-        const progress = Math.floor((writeBytes / totalBytes) * 100);
-        console.log(progress_event_name , "uploaded : ", progress, "%");
-        io.emit(progress_event_name, { progress });
-      });
+      // readStream.on("data", (chunk) => {
+      //   writeBytes += chunk.length;
+      //   const progress = Math.floor((writeBytes / totalBytes) * 100);
+      //   console.log(jobId , "uploaded : ", progress, "%");
+      //   io.emit(jobId, { progress });
+      // });
 
       readStream.pipe(stream);
     }

@@ -1,0 +1,1714 @@
+openapi: 3.0.3
+info:
+  title: Wafipix
+  version: 1.0.0
+  description: This is Wafipix api desing.
+servers:
+  - url: http://localhost:3001
+    description: Development server
+tags:
+  - name: Services
+  - name: Portfolios
+  - name: Packages
+  - name: Top-Customers
+  - name: Hero-Features
+  - name: Social-Info
+  - name: Contact-Info
+  - name: Logo
+
+
+paths:
+
+  # SERVICES----------------------------------------------
+  /services:
+    get:
+      tags:
+        - Services
+      summary: Get all services
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/filter'
+        - name: populate
+          in: query
+          description: Populate fields
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Get A list of services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Services
+      summary: Create a new service
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/Service'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/{id}:
+    get:
+      tags:
+        - Services
+      summary: Get a service by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a service by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+      
+
+    delete:
+      tags:
+        - Services
+      summary: Delete a service by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError' 
+
+  /services/findbyslug/{slug}:
+    get:
+      tags:
+        - Services
+      summary: Get a service by slug
+      parameters:
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '200':
+          description: Get a service by slug
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/{id}/update/texts:
+    put:
+      tags:
+        - Services
+      summary: Update a service text by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+      responses:
+        '200':
+          description: Update a service text by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/{id}/update/image:
+    put:
+      tags:
+        - Services
+      summary: Update a service image by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update a service image by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  
+  /services/{id}/update/icon:
+    put:
+      tags:
+        - Services
+      summary: Update a service icon by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                icon:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update a service icon by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /services/{id}/update/active-status:
+    put:
+      tags:
+        - Services
+      summary: Update a service status by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Update a service status by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Service'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+  # PORTFOLIOS----------------------------------------------
+  /portfolios:
+    get:
+      tags:
+        - Portfolios
+      summary: Get all portfolios
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+      responses:
+        '200':
+          description: Get A list of portfolios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Portfolios
+      summary: Create a new portfolio
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/Portfolio'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/{id}:
+    get:
+      tags:
+        - Portfolios
+      summary: Get a portfolio by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a portfolio by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Portfolios
+      summary: Delete a portfolio by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/findbyslug/{slug}:
+    get:
+      tags:
+        - Portfolios
+      summary: Get a portfolio by slug
+      parameters:
+        - $ref: '#/components/parameters/slug'
+      responses:
+        '200':
+          description: Get a portfolio by slug
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/findbyserviceid/{id}:
+    get:
+      tags:
+        - Portfolios
+      summary: Get a portfolio by service id
+      parameters:
+        - $ref: '#/components/parameters/id'
+        - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          description: Get a portfolio by service id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/{id}/update/image:
+    put:
+      tags:
+        - Portfolios
+      summary: Update a portfolio image by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update a portfolio image by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/{id}/update/texts:
+    put:
+      tags:
+        - Portfolios
+      summary: Update a portfolio text by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+      responses:
+        '200':
+          description: Update a portfolio text by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /portfolios/{id}/update/service:
+    put:
+      tags:
+        - Portfolios
+      summary: Update a portfolio service by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serviceId:
+                  type: string
+      responses:
+        '200':
+          description: Update a portfolio service by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Portfolio'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # PACKAGES----------------------------------------------
+  /packages:
+    get:
+      tags:
+        - Packages
+      summary: Get all packages
+      responses:
+        '200':
+          description: Get A list of packages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Packages
+      summary: Create a new package
+      security:
+        - BearerAuth: []
+      requestBody:
+        $ref: '#/components/requestBodies/Package'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /packages/{id}:
+    get:
+      tags:
+        - Packages
+      summary: Get a package by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a package by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /packages/findbyserviceid/{id}:
+    get:
+      tags:
+        - Packages
+      summary: Get a package by service id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a package by service id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Packages
+      summary: Delete a package by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /packages/{id}/update/texts:
+    put:
+      tags:
+        - Packages
+      summary: Update a package text by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                price:
+                  type: array
+                  properties:
+                    value:
+                      type: number
+                    currency:
+                      type: string
+                features:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Update a package text by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /packages/{id}/update/active-status:
+    put:
+      tags:
+        - Packages
+      summary: Update a package status by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Update a package status by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  
+  /packages/{id}/update/service:
+    put:
+      tags:
+        - Packages
+      summary: Update a package service by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                serviceId:
+                  type: string
+      responses:
+        '200':
+          description: Update a package service by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  /packages/{id}/update/price:
+    put:
+      tags:
+        - Packages
+      summary: Update a package price by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bdt:
+                  type: number
+                usd:
+                  type: number
+      responses:
+        '200':
+          description: Update a package price by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Package'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+  # TOP-CUSTOMERS----------------------------------------------
+  /top-customers:
+    get:
+      tags:
+        - Top-Customers
+      summary: Get all top customers
+      responses:
+        '200':
+          description: Get A list of top customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Top_Customers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Top-Customers
+      summary: Create a new top customer
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  format: binary
+                title:  
+                  type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Customers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /top-customers/{id}:
+    get:
+      tags:
+        - Top-Customers
+      summary: Get a top customer by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a top customer by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Customers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Top-Customers
+      summary: Delete a top customer by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /top-customers/{id}/update/logo:
+    put:
+      tags:
+        - Top-Customers
+      summary: Update a top customer image by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update a top customer image by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Customers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /top-customers/{id}/update/texts:
+    put:
+      tags:
+        - Top-Customers
+      summary: Update a top customer text by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:  
+                  type: string
+      responses:
+        '200':
+          description: Update a top customer text by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Top_Customers'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+  # SOCIAL-INFO----------------------------------------------
+  /social-info:
+    get:
+      tags:
+        - Social-Info
+      summary: Get all social info
+      responses:
+        '200':
+          description: Get A list of social info
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Social_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Social-Info
+      summary: Create a new social info
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+                icon:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /social-info/{id}:
+    get:
+      tags:
+        - Social-Info
+      summary: Get a social info by id
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '200':
+          description: Get a social info by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    delete:
+      tags:
+        - Social-Info
+      summary: Delete a social info by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /social-info/{id}/update/texts:
+    put:
+      tags:
+        - Social-Info
+      summary: Update a social info text by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                url:
+                  type: string
+      responses:
+        '200':
+          description: Update a social info text by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /social-info/{id}/update/icon:
+    put:
+      tags:
+        - Social-Info
+      summary: Update a social info icon by id
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/id'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                icon:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update a social info icon by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Social_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+
+  # HERO-FEATURES----------------------------------------------
+  /hero-features:
+    get:
+      tags:
+        - Hero-Features
+      summary: Get all hero features
+      responses:
+        '200':
+          description: Get A list of hero features
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hero_Features'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Hero-Features
+      summary: Create a new hero feature
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hero_Features'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags:
+        - Hero-Features
+      summary: Update a hero feature by id
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '200':
+          description: Update a hero feature by id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hero_Features'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+
+
+  # CONTACT-INFO----------------------------------------------
+  /contact-info:
+    get:
+      tags:
+        - Contact-Info
+      summary: Get contact info
+      responses:
+        '200':
+          description: Get contact info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Contact-Info
+      summary: Create a new contact info
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact_Info'
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags:
+        - Contact-Info
+      summary: Update contact info
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact_Info'
+      responses:
+        '200':
+          description: Update contact info
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Contact_Info'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+
+  # LOGO----------------------------------------------
+  /logo:
+    get:
+      tags:
+        - Logo
+      summary: Get logo
+      responses:
+        '200':
+          description: Get logo
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Image'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    post:
+      tags:
+        - Logo
+      summary: Create a new logo
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  format: binary
+              
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+    put:
+      tags:
+        - Logo
+      summary: Update logo
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                logo:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Update logo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Image'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# COMPONENTS----------------------------------------------
+
+components:
+  schemas:
+    Service:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        slug:
+          type: string
+        icon:
+          type: object
+          $ref: '#/components/schemas/Image'
+        image:
+          type: object
+          $ref: "#/components/schemas/Image"
+        is_active:
+          type: boolean
+          default: true
+      required:
+        - title
+
+    Portfolio:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        serviceId:
+          type: string
+        image:
+          type: object
+          $ref: "#/components/schemas/Image"
+      required:
+        - title
+        - serviceId
+
+    Package:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        serviceId:
+          type: string
+        is_active:
+          type: boolean
+          default: true
+        price:
+          type: array
+          items:
+            type: object
+            properties:
+              currency:
+                type: string
+                default: 'BDT'
+                enum:
+                  - BDT
+                  - USD
+                  - EUR
+              value:
+                type: number
+        features:
+          type: array
+          items:
+            type: string
+
+    Image:
+      type: object
+      properties:
+        url:
+          type: string
+        public_id:
+          type: string
+
+    Social_Info:
+      type: object
+      properties:
+        title:
+          type: string
+        icon:
+          type: object
+          $ref: '#/components/schemas/Image'
+        url:
+          type: string
+    
+    Contact_Info:
+      type: object
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+        area:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+
+    Top_Customers:
+      type: object
+      properties:
+        title:
+          type: string
+        logo:
+          type: object
+          $ref: '#/components/schemas/Image'
+    
+    Hero_Features:
+      type: array
+      items:
+        type: string
+
+    ApiPaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+  
+  requestBodies:
+    Service:
+      content: 
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              icon:
+                type: string
+                format: binary
+              image:
+                type: string
+                format: binary
+              is_active:
+                type: boolean
+                default: true
+    
+    Portfolio:
+      content: 
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              serviceId:
+                type: string
+              image:
+                type: string
+                format: binary
+    
+    Package:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              serviceId:
+                type: string
+              is_active:
+                type: boolean
+                default: true
+              price:
+                type: object
+                properties:
+                    bdt:
+                      type: number
+                    usd:
+                      type: number
+              features:
+                type: array
+                items:
+                  type: string
+
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    slug:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+    page:
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 1
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 10
+    sort:
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        default: 'desc'
+        enum:
+          - asc
+          - desc
+    
+    filter:
+      name: filter
+      in: query
+      required: false
+      schema:
+        type: string
+        default: 'all'
+        enum:
+          - all
+          - active
+          - inactive
+  
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+    UnathenticatedError:
+      description: Access token is missing or invalid
+    ServerError:
+      description: Internal server error
+    Success:
+      description: Success
+    Created:
+      description: Created
+    BadRequest:
+      description: Bad request
+    NotFound:
+      description: Not found
+    Forbidden:
+      description: Forbidden
+    Conflict:
+      description: Conflict
+    NoContent:
+      description: No content
+  
+    

@@ -5,6 +5,17 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// isCurrent nav
+export const isCurrentPath = ({nav, pathName}:{nav: string, pathName: string}) => {
+  if(pathName.toLocaleLowerCase() == "home" || pathName == "/") {
+    if(nav.toLocaleLowerCase() == "/" || nav.toLocaleLowerCase() == "home") return true
+  }
+  else if(pathName.toLocaleLowerCase() !== "home" || pathName.toLocaleLowerCase() !== "/") {
+    return pathName.toLocaleLowerCase().includes(nav.toLocaleLowerCase())
+  }
+  else return false;
+}
+
 // check object same or not
 export const isObjectSame = ({
   obj1,
@@ -24,6 +35,29 @@ export const isObjectSame = ({
 
   return true;
 };
+
+// check that data same or not, if same then return true, data can be, normarl type, or object, or array, or object conatins array, or  array contains obje, all types possible,
+export const isSame = (dataA: any, dataB: any) => {
+  if (typeof dataA !== typeof dataB) return false;
+  if (typeof dataA === "object") {
+    if (Array.isArray(dataA)) {
+      if (dataA.length !== dataB.length) return false;
+      for (let i = 0; i < dataA.length; i++) {
+        if (!isSame(dataA[i], dataB[i])) return false;
+      }
+    } else {
+      const keysA = Object.keys(dataA);
+      const keysB = Object.keys(dataB);
+      if (keysA.length !== keysB.length) return false;
+      for (let key of keysA) {
+        if (!isSame(dataA[key], dataB[key])) return false;
+      }
+    }
+  } else {
+    if (dataA !== dataB) return false;
+  }
+  return true;
+}
 
 // check is Email or not
 

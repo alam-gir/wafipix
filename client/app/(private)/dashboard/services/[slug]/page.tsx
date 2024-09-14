@@ -1,17 +1,21 @@
-import ServiceViewAdmin from "@/app/(private)/_components/page/service/service-view-admin";
+import { FC } from "react";
+import PageHeader from "../../../_components/page-header";
 import SectionSeparator from "@/components/global/section-separator";
-import { FC, Suspense } from "react";
+import ServiceFormContainer from "@/app/(private)/_components/service/service-form-container";
 
-interface ServiceProps {
+interface ServiceViewProps {
   params: { slug: string };
 }
 
-const Service: FC<ServiceProps> = ({ params }) => {
+const ServiceView: FC<ServiceViewProps> = ({ params }) => {
   const { slug } = params;
-  return <div>
-    <ServiceViewAdmin slug={slug} />
-    <SectionSeparator />
-    </div>;
+  return (
+    <div>
+      <PageHeader title="Service" description="Modify your service" />
+      <SectionSeparator className="min-h-6 lg:min-h-6" />
+      <ServiceFormContainer slug={slug} />
+    </div>
+  );
 };
 
-export default Service;
+export default ServiceView;

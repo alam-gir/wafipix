@@ -1,10 +1,10 @@
 import { CorsOptions } from "cors";
-import { origns } from "./utils";
+import { origins } from "./utils";
 
 export const corsOptions: CorsOptions = {
-  origin: origns,
-  allowedHeaders:  "*",
-  methods:"*",
+  origin: origins,
+  allowedHeaders:  ["Authorization", "Content-type","*"],
+  methods:["*", "POST", "GET", "PUT", "DELETE", "PATCH"],
   credentials: true,
   optionsSuccessStatus: 200,
 };

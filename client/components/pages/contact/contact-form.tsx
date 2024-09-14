@@ -27,10 +27,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
-import { useSendContactMail } from "@/components/hooks/react-query/contact/mutation";
 import ButtonLoader from "@/components/global/button-loader";
 import { useToast } from "@/components/ui/use-toast";
 import ContactMessageSentDialog from "./contact-message-sent-dialog";
+import { useApiSend } from "@/lib/reactQuery";
+import { sendContactMail, TEmailForm } from "@/lib/URL-services/email";
+import Button2 from "@/components/global/buttons/button2";
 
 const ContactSchema = z.object({
   name: z
@@ -53,6 +55,15 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
 
   const { toast } = useToast();
 
+  // const {
+  //   mutate,
+  //   data: mutateData,
+  //   isSuccess,
+  //   isPending,
+  //   isError,
+  //   error,
+  // } = useSendContactMail();
+
   const {
     mutate,
     data: mutateData,
@@ -60,7 +71,9 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
     isPending,
     isError,
     error,
-  } = useSendContactMail();
+  } = useApiSend<{ success: boolean; message: string }, TEmailForm>({
+    mutationFn: sendContactMail,
+  });
 
   const form = useForm<z.infer<typeof ContactSchema>>({
     mode: "onSubmit",
@@ -105,8 +118,9 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
     }
   }, [isSuccess, mutateData, form, isError, error, toast]);
 
+  console.log({ isSuccess, isPending, isError, error, mutateData });
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full max-w-screen-sm">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(submitHandle)} className="space-y-6">
           <div className="space-y-4">
@@ -295,22 +309,20 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
             />
           </div>
           {/* Submit Button */}
-          <Button
-            size={"lg"}
-            className="text-lg lg:text-xl flex items-center gap-2 group"
-            type="submit"
-            variant={"secondary"}
-            disabled={isPending}
-          >
-            {isPending ? (
-              <ButtonLoader text="Sending message..." />
-            ) : (
-              <>
-                <span>Send it</span>{" "}
+          <div className="pt-6">
+            <Button2
+              title="Send Message"
+              icon={
                 <MoveRight className="h-4 w-4 group-hover:ml-2 duration-300" />
-              </>
-            )}
-          </Button>
+              }
+              size={"lg"}
+              className="w-full text-lg lg:text-xl"
+              type="submit"
+              disabled={isPending}
+              isLoading={isPending}
+              loadingText="Sending..."
+            />
+          </div>
         </form>
       </Form>
       <ContactMessageSentDialog open={isSent} onOpenChange={onOpenChange} />

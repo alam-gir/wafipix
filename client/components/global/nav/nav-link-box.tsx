@@ -1,7 +1,7 @@
 "use client";
 import { FC } from "react";
 import { Variants, motion } from "framer-motion";
-import NavboxPageNaviagtions from "./navbox-page-naviagtions";
+import NavigationMenus from "./navigation-menus";
 
 interface NavLinkBoxProps {
   isMenuOpen: boolean;
@@ -38,11 +38,11 @@ const NavLinkBox: FC<NavLinkBoxProps> = ({ isMenuOpen, onClick }) => {
       variants={variants}
       animate={isMenuOpen ? "animate" : "initial"}
       initial="initial"
-      className="[--navlink-box-w:100vw] md:[--navlink-box-w:24rem] [--navlink-box-h:100vh] md:[--navlink-box-h:80vh] [--navlink-box-top:-16px] [--navlink-box-right:32px]  md:[--navlink-box-top:0] md:[--navlink-box-right:0] [--navlink-box-radius:0] md:[--navlink-box-radius:20px] bg-accent2 backdrop-blur-xl fixed top-4 right-8 z-20 flex flex-col justify-between"
+      className="[--navlink-box-w:100vw] md:[--navlink-box-w:24rem] [--navlink-box-h:100vh] md:[--navlink-box-h:80vh] [--navlink-box-top:-16px] [--navlink-box-right:32px]  md:[--navlink-box-top:0] md:[--navlink-box-right:0] [--navlink-box-radius:0] md:[--navlink-box-radius:20px] from-accent3 to-accent4 via-accent3 bg-gradient-to-tr backdrop-blur-xl fixed top-4 right-8 z-20 flex flex-col justify-between"
     >
       {/* page navigation liks */}
       <div className="pt-8">
-        {isMenuOpen ? <NavboxPageNaviagtions onClick={onClick} /> : null}
+        {isMenuOpen ? <NavigationMenus onClick={onClick} /> : null}
       </div>
       {/* social navigation liks */}
     </motion.div>

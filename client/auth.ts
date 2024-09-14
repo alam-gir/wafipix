@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
-import { SERVER_URL } from "./lib/url"
+import { API_BASE_URL } from "./lib/url"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -19,7 +19,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const { name, email, sub, email_verified, picture } = profile;
         const data = { sub, email, name, picture, email_verified };
 
-        const url = `${SERVER_URL}/auth/login/google`;
+        const url = `${API_BASE_URL}/auth/login/google`;
 
         try {
           const response = await fetch(url, {

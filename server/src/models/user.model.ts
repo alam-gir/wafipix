@@ -1,5 +1,4 @@
-import mongoose, { Schema } from "mongoose";
-import { Review } from "./review.model";
+import mongoose from "mongoose";
 
 export interface User extends mongoose.Document {
   sub: string;
@@ -8,14 +7,10 @@ export interface User extends mongoose.Document {
   email: string;
   email_verified?: boolean;
   phone?: string;
-  reviews: mongoose.Types.ObjectId | Review[];
   role: "USER" | "ADMIN" | "MODERATOR";
   // will be add many user things...
 }
 
-export interface UserPopulated extends User {
-  reviews: Review[];
-}
 
 const UserSchema = new mongoose.Schema<User>(
   {
@@ -25,7 +20,6 @@ const UserSchema = new mongoose.Schema<User>(
     email: { type: String, required: true },
     email_verified: { type: Boolean, default: false },
     phone: String,
-    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
     role: {
       type: String,
       enum: ["USER", "ADMIN", "MODERATOR"],

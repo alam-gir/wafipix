@@ -1,90 +1,95 @@
 services:
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
+  # client:
+  #   build:
+  #     context: ./client
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     - SERVER_BASE_URL=${SERVER_BASE_URL}
+
+  #     #nextauth url
+  #     - NEXTAUTH_URL=${NEXTAUTH_URL}
+  #     - AUTH_SECRET=${AUTH_SECRET}
+
+  #     #google console
+  #     - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+  #     - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
+  #   depends_on:
+  #     - server
+
+  #   networks:
+  #     - wafipix_network
+
+  # server:
+  #   build:
+  #     context: ./server
+  #     dockerfile: Dockerfile
+
+  #   ports:
+  #     - 3001:3001
+
+  #   environment:
+  #     - PORT=3001
+  #     - ORIGIN=${ORIGIN}
+  #     - MONGODB_URL=${MONGODB_URL}
+  #     - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+  #     - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+  #     - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+
+  #     - CLOUDINARY_SERVICE_IMAGE_FOLDER={$CLOUDINARY_SERVICE_IMAGE_FOLDER}
+  #     - CLOUDINARY_SERVICE_ICON_FOLDER={$CLOUDINARY_SERVICE_ICON_FOLDER}
+
+  #     - CLOUDINARY_PORTFOLIO_IMAGE_FOLDER={$CLOUDINARY_PORTFOLIO_IMAGE_FOLDER}
+  #     - CLOUDINARY_LOGO_FOLDER={$CLOUDINARY_LOGO_FOLDER}
+
+  #     - CLOUDINARY_TOP_CUSTOMER_FOLDER={$CLOUDINARY_TOP_CUSTOMER_FOLDER}
+
+  #     - CLOUDINARY_SOCIAL_INFO_ICON_FOLDER=[$CLOUDINARY_SOCIAL_INFO_ICON_FOLDER]
+
+  #     - JWT_SECRET=${JWT_SECRET}
+  #     - EMAIL_USER=${EMAIL_USER}
+  #     - EMAIL_PASS=${EMAIL_PASS}
+  #     - CONTACT_MAIL=${CONTACT_MAIL}
+  #   depends_on:
+  #     - mongo
+
+  #   networks:
+  #     - wafipix_network
+
+  mongo:
+    image: mongo
+    restart: always
     ports:
-      - 3000:3000
+      - 27017:27017
     environment:
-      - SERVER_BASE_URL=http://server:3001
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - wafipix_network
 
-      #nextauth url
-      - NEXTAUTH_URL=https://www.wafipix.com
-      - AUTH_SECRET=xMkJaZKzK36EM6W19uqt6WUUnu1+4S3hmYO5GpvQpXvq
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+      ME_CONFIG_MONGODB_URL: mongodb://root:admin@mongo:27017/
+      ME_CONFIG_BASICAUTH: false
 
-      #google console
-      - GOOGLE_CLIENT_ID=436253371960-faltkh2kfps1q7fgjtgtd1q5b0ikaq64.apps.googleusercontent.com
-      - GOOGLE_CLIENT_SECRET=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
-
-      #addresses
-      - COUNRTY=Bangladesh
-      - CITY=Chittagong
-      - AREA=Colonel Hat
-      - PHONE=+8801632243382
-      - EMAIL=wafipix1@gmail.com
-
-      #addvertise video
-      - ADDVERTISE_VIDEO_LINK=https://res.cloudinary.com/dugc533jq/video/upload/f_auto:video,q_auto/v1/wafipix/advertise-video/w70l4s2wohpgb0hjrc1z
-      - ADDVERTISE_VIDEO_TYPE=video/webm
-
-      #social media links
-      - FACEBOOK_PAGE_LINK=https://www.facebook.com
-      - DRIBBBLE_LINK=https://www.dribbble.com
-      - FACEBOOK_MESSENGER_LINK=https://www.facebook.com
-     
     depends_on:
-      - server
-
-    develop:
-      watch: 
-        - action: rebuild
-          path: ./client/package.json
-
-        - action: sync
-          path: ./client/
-          target: /app
-
+      - mongo
     networks:
       - wafipix_network
-  
-  server:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
 
-    ports:
-      - 3001:3001
-
-    environment:
-      - PORT=3001
-      - ORIGIN=https://www.wafipix.com,http://localhost:3000
-      - MONGODB_URL=mongodb+srv://wafipix1:Openit420@wafipixcluster.lm4udbf.mongodb.net/wafipix?retryWrites=true&w=majority&appName=wafipixCluster
-      - CLOUDINARY_CLOUD_NAME=dugc533jq
-      - CLOUDINARY_API_KEY=911967824621894
-      - CLOUDINARY_API_SECRET=EBzOzyWl2UfNguHh9CGqxfC4U2k
-      - CLOUDINARY_PORTFOLIO_PROFILE_IMAGE_FOLDER=wafipix/portfolio/images/profile
-      - CLOUDINARY_PORTFOLIO_MEDIA_IMAGE_FOLDER=wafipix/portfolio/images/media
-      - CLOUDINARY_PORTFOLIO_MEDIA_VIDEO_FOLDER=wafipix/portfolio/videos/media
-      - JWT_SECRET=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
-      - EMAIL_USER=info.alamgirhussain@gmail.com
-      - EMAIL_PASS=cbyl fmrs lifc agbt
-      - CONTACT_MAIL=info.alamgirhussain@gmail.com
-
-    develop:
-      watch: 
-        - action: rebuild
-          path: ./server/package.json
-
-        - action: sync
-          path: ./server/src
-          target: /app
-    
-    networks:
-      - wafipix_network
+volumes:
+  mongodb_data:
 
 networks:
   wafipix_network:
     driver: bridge
-
-  
-

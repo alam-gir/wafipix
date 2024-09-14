@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 export type Portfolio = {
   _id: string;
   title: string;
@@ -154,8 +156,8 @@ export type AllReview = {
   text: string;
   user_name: string;
   user_picture: string;
-  active: boolean,
-  featured: boolean
+  active: boolean;
+  featured: boolean;
 };
 
 export type ReviewStatus = {
@@ -172,4 +174,41 @@ export type ServiceTextsAdmin = {
   short_description: string;
   active: boolean;
   featured: boolean;
+};
+
+export type WorkWithCompany = {
+  title: string;
+  logo: string;
+};
+
+export type Portfolio2 = {
+  id: any;
+  title: string;
+  slug: string;
+  image: string | StaticImageData;
+  service: string;
+};
+
+export type Service2 = {
+  id: any
+  title: string;
+  slug: string;
+  image: string | StaticImageData;
+  description: string;
+};
+
+export type Package = {
+  title: string;
+  description: string;
+  price: number;
+  price_type: "BDT" | "USD";
+  features: string[];
+  serviceId: any;
+  active: boolean;
+  offer: {
+    perchentage: number;
+    price: number;
+    name: string;
+    active: boolean;
+  };
 };
