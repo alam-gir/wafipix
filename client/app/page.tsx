@@ -7,7 +7,8 @@ import ShowcaseBlock from "@/components/pages/home/showcase-block";
 
 const Home = () => {
   return (
-    <main className="h-full w-full mt-20">
+    <main className="h-full w-full">
+
       <HeroBlock />
 
       <Separator className="h-[68px]" />

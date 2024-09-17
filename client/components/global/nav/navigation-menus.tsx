@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { navLinks, services } from "@/data";
+import { navLinks } from "@/data";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { cn, isCurrentPath } from "@/lib/utils";

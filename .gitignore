@@ -1,7 +1,10 @@
+.env
+
 ./client/.next
 ./client/node_modules
 ./client/.env.example
 ./client/.env.local
+./client/.env
 
 ./server/dist
 ./server/node_modules

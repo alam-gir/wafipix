@@ -27,7 +27,7 @@ const PackageContainer: FC<PackageContainerProps> = ({}) => {
   const { isLoading, data } = useApiGet<TService>({
     queryKey: getServicesKey.bySlug(selectedService!),
     queryFn: () => getServiceBySlug(selectedService!),
-    enabled: selectedService != null && selectedService != "all",
+    enabled: !!selectedService && selectedService != "all",
   });
 
   const { isLoading: isLoadingPackages, data: packages } = useApiGet<
@@ -47,7 +47,6 @@ const PackageContainer: FC<PackageContainerProps> = ({}) => {
     enabled: selectedService == "all" || selectedService == null,
   });
 
-  console.log({ allPackages });
   const currentPackages =
     selectedService == "all"
       ? allPackages?.packages

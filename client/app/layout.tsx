@@ -10,6 +10,7 @@ import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import Navbar from "@/components/global/nav/navbar";
 import ClientSessionProvider from "@/components/hooks/client-session-provider";
+import Separator from "@/components/global/separator";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +45,8 @@ export default async function RootLayout({
                 <TopLoader height={5} color="#5025D0" />
                 
                 <Navbar />
+
+                <Separator className="h-16 lg:h-20" />
 
                 {children}
 
