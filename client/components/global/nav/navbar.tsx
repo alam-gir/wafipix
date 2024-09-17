@@ -18,7 +18,7 @@ const Navbar: FC<NavbarProps> = ({ }) => {
         <div className=" flex items-center justify-between h-full w-full text-primary">
 
           {/* LOGO */}
-          <div>
+          <div className="w-1/2">
             <Logo />
           </div>
           {/* NAVIGATION LINKS */}
@@ -27,12 +27,12 @@ const Navbar: FC<NavbarProps> = ({ }) => {
           </div>
           {/* BOOK BUTTON */}
           <div className="hidden lg:flex min-w-60  justify-end">
-            <Button2 size={"lg"} title="GET YOUR DESIGN" href="/contact" icon={<MoveRight />}/>
+            <Button2 size={"lg"} title="Contact Now" href="/contact" icon={<MoveRight />}/>
           </div>
 
           {/* MOBILE NAVBAR */}
-          <div className="lg:hidden flex items-center gap-4">
-            <Button2 size={"sm"} title="BOOK A CALL" href="/contact"/>
+          <div className="lg:hidden flex items-center justify-end gap-4 w-1/2">
+            <Button2 size={"sm"} title="Contact Now" href="/contact"/>
             <MobileNav />
           </div>
         </div>

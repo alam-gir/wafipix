@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, UserIcon, LogOutIcon, HeartHandshake, BriefcaseBusiness, Package, LayoutDashboard, MapPin, Globe, Sparkles, Feather, Hexagon } from 'lucide-react';
 import MenuItem from './menu-item'; // Separate MenuItem component
+import Button2 from '@/components/global/buttons/button2';
+import LogoutButton from './auth/logout-button';
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(true);
@@ -35,22 +37,11 @@ export default function Sidebar() {
         <MenuItem href="/dashboard/top-customers" icon={<Sparkles />} label="Top-Customers" isCollapsed={isCollapsed} />
         <MenuItem href="/dashboard/social-info" icon={<Globe />} label="Social-Info" isCollapsed={isCollapsed} />
         <MenuItem href="/dashboard/contact-info" icon={<MapPin />} label="Contact-Info" isCollapsed={isCollapsed} />
-        
       </nav>
 
       {/* Profile Section */}
-      <div className="p-4 mt-auto border-t border-primary-foreground">
-        <MenuItem
-          href=""
-          icon={<UserIcon />}
-          label="Profile"
-          isCollapsed={isCollapsed}
-          hasDropdown
-          dropdownItems={[
-            { href: '/logout', label: 'Logout', icon: <LogOutIcon /> },
-            // Add more dropdown items here
-          ]}
-        />
+      <div className="mt-auto border-t border-primary-foreground">
+      <LogoutButton isCollapsed={isCollapsed} />
       </div>
     </div>
   );

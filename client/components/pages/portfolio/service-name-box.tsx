@@ -1,7 +1,6 @@
 "use client"
 
 import SectionLoader from "@/components/global/section-loader";
-import { services } from "@/data";
 import { useApiGet } from "@/lib/reactQuery";
 import { TPaginate } from "@/lib/URL-services/portfolios";
 import { getServices, getServicesKey, TService } from "@/lib/URL-services/services";

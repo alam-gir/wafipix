@@ -6,7 +6,9 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = ({children}) => {
-  return <DashboardLayout>{children}</DashboardLayout>
+  return <DashboardLayout>
+    {children}
+    </DashboardLayout>
 }
 
 export default Layout

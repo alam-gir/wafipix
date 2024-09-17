@@ -98,7 +98,16 @@ const PortfolioGalleryInPortfolioPage: FC<
     } else{
       setPage(1);
     }
-  }, [updatedPage]);
+
+    if(selectedService) {
+      setFilterKeys((prev) => {
+        const serviceKey = `service=${selectedService}`;
+        if (!prev.includes(serviceKey)) prev.push(serviceKey);
+        return prev;
+      });
+    }
+
+  }, [updatedPage, selectedService]);
 
   if (isLoading || isLoadingPortfolios || isLoadingAllPortfolios)
     return <SectionLoader className="min-h-[50vh]" />;

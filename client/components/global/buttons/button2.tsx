@@ -7,7 +7,7 @@ import { FC, useRef } from "react";
 
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-4 whitespace-nowrap text-base font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:ring-8 duration-100 transition-all",
+    "inline-flex items-center justify-center whitespace-nowrap text-base font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:ring-8 duration-100 transition-all",
     {
       variants: {
           variant: {
@@ -61,7 +61,7 @@ const Button2 : FC<Button2Props> = ({isLoading,loadingText="Loading..." ,hideTex
         props.onClick && props.onClick(e)
     }
 
-    const buttonContent = <>{leftIcon ? <span>{leftIcon}</span> : null}
+    const buttonContent = <>{leftIcon ? <span className="mr-4">{leftIcon}</span> : null}
     {title ? <span className={cn({
         "hidden sm:inline": hideText === "mobile",
         "hidden md:inline": hideText === "mobile-tablet",
@@ -69,7 +69,7 @@ const Button2 : FC<Button2Props> = ({isLoading,loadingText="Loading..." ,hideTex
         "hidden xl:inline": hideText === "tablet-desktop",
         "hidden 2xl:inline": hideText === "desktop",
     })}> {title}</span> : null}
-    {rightIcon ? <span>{rightIcon}</span> : null}
+    {rightIcon ? <span className="ml-4">{rightIcon}</span> : null}
     {onlyIcon ? onlyIcon : null}
     {href ? <Link ref={LinkRef} href={href} /> : null}
     </>
