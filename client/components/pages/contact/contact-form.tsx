@@ -118,7 +118,6 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
     }
   }, [isSuccess, mutateData, form, isError, error, toast]);
 
-  console.log({ isSuccess, isPending, isError, error, mutateData });
   return (
     <div className="h-full w-full max-w-screen-sm">
       <Form {...form}>
