@@ -25,9 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import { MoveRight } from "lucide-react";
-import ButtonLoader from "@/components/global/button-loader";
 import { useToast } from "@/components/ui/use-toast";
 import ContactMessageSentDialog from "./contact-message-sent-dialog";
 import { useApiSend } from "@/lib/reactQuery";
@@ -41,6 +39,7 @@ const ContactSchema = z.object({
     .max(20, { message: "Name must be at most 20 characters long" }),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().optional(),
+  zipCode: z.string({ message: "Zip code is required" }).min(1),
   sourceOfCustomer: z.string(),
   message: z
     .string()
@@ -55,14 +54,6 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
 
   const { toast } = useToast();
 
-  // const {
-  //   mutate,
-  //   data: mutateData,
-  //   isSuccess,
-  //   isPending,
-  //   isError,
-  //   error,
-  // } = useSendContactMail();
 
   const {
     mutate,
@@ -82,6 +73,7 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
       name: "",
       email: "",
       phone: "",
+      zipCode: "",
       sourceOfCustomer: "google",
       message: "",
       isSubscribe: true,
@@ -89,10 +81,12 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
   });
 
   const submitHandle = (data: z.infer<typeof ContactSchema>) => {
+    console.log(data);
     mutate({
       name: data?.name,
       email: data?.email,
       phone: data?.phone,
+      zipCode: data?.zipCode,
       sourceOfCustomer: data?.sourceOfCustomer,
       message: data?.message,
       isSubscribe: data?.isSubscribe,
@@ -114,6 +108,7 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
       toast({
         title: "Failed to send message.",
         description: error?.message || mutateData?.message,
+        variant: "destructive"
       });
     }
   }, [isSuccess, mutateData, form, isError, error, toast]);
@@ -197,64 +192,96 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
               />
             </div>
 
-            {/* SourceOfCustomer  option field */}
-            <FormField
-              control={form.control}
-              name="sourceOfCustomer"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel
-                    htmlFor="sourceOfCustomer"
-                    className="text-lg lg:text-xl"
-                  >
-                    Where did you find us?
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+            <div className="flex gap-4">
+              {/* Zip code field */}
+              <FormField
+                control={form.control}
+                name="zipCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg lg:text-xl" htmlFor="zipCode">
+                      Zip Code
+                    </FormLabel>
                     <FormControl>
-                      <SelectTrigger className="text-lg lg:text-xl">
-                        <SelectValue id="sourceOfCustomer" />
-                      </SelectTrigger>
+                      <Input
+                        className="text-lg lg:text-xl"
+                        {...field}
+                        type="tel"
+                        placeholder="54321"
+                        id="zipCode"
+                        name="zipCode"
+                      />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem className="text-lg lg:text-xl" value="google">
-                        From google.
-                      </SelectItem>
-                      <SelectItem
-                        className="text-lg lg:text-xl"
-                        value="youtube"
-                      >
-                        From youtube.
-                      </SelectItem>
-                      <SelectItem
-                        className="text-lg lg:text-xl"
-                        value="facebook"
-                      >
-                        From facebook.
-                      </SelectItem>
-                      <SelectItem
-                        className="text-lg lg:text-xl"
-                        value="instagram"
-                      >
-                        From instagram.
-                      </SelectItem>
-                      <SelectItem
-                        className="text-lg lg:text-xl"
-                        value="twitter"
-                      >
-                        From twitter.
-                      </SelectItem>
-                      <SelectItem className="text-lg lg:text-xl" value="others">
-                        From other sources.
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* SourceOfCustomer  option field */}
+              <FormField
+                control={form.control}
+                name="sourceOfCustomer"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel
+                      htmlFor="sourceOfCustomer"
+                      className="text-lg lg:text-xl"
+                    >
+                      Where did you find us?
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="text-lg lg:text-xl">
+                          <SelectValue id="sourceOfCustomer" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="google"
+                        >
+                          From google.
+                        </SelectItem>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="youtube"
+                        >
+                          From youtube.
+                        </SelectItem>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="facebook"
+                        >
+                          From facebook.
+                        </SelectItem>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="instagram"
+                        >
+                          From instagram.
+                        </SelectItem>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="twitter"
+                        >
+                          From twitter.
+                        </SelectItem>
+                        <SelectItem
+                          className="text-lg lg:text-xl"
+                          value="others"
+                        >
+                          From other sources.
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             {/* message  field */}
             <FormField

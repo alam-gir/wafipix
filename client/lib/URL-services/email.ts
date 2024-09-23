@@ -2,6 +2,7 @@ export type TEmailForm = {
     name: string;
     email: string;
     phone?: string;
+    zipCode: string;
     sourceOfCustomer: string;
     message: string;
     isSubscribe: boolean;

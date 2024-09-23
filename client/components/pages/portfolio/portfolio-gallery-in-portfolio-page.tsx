@@ -32,7 +32,7 @@ const PortfolioGalleryInPortfolioPage: FC<
 
   const [filterKeys, setFilterKeys] = useState<string[]>([]);
   const [page, setPage] = useState<number>(1);
-  const [limit, setLimit] = useState<number>(6);
+  const [limit, setLimit] = useState<number>(12);
 
   const selectedService = useSearchParams().get("service");
 
