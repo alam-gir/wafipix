@@ -6,7 +6,6 @@ services:
   #   ports:
   #     - 3000:3000
   #   environment:
-  #     - SERVER_BASE_URL=${SERVER_BASE_URL}
 
   #     #nextauth url
   #     - NEXTAUTH_URL=${NEXTAUTH_URL}

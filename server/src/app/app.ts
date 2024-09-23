@@ -14,6 +14,7 @@ import contactInfoRoutes from "../routers/contact-info.routes";
 import userRoutes from "../routers/user.routes";
 import authRoutes from '../routers/auth.routes'
 import emailRoutes from '../routers/email.routes'
+import fbPixelEventRoutes from '../routers/fb-pixel-event-routes'
 
 import { corsOptions } from "../lib/cors-options";
 
@@ -45,6 +46,7 @@ app.use(contactInfoRoutes)
 app.use(userRoutes);
 app.use(authRoutes)
 app.use(emailRoutes)
+app.use(fbPixelEventRoutes)
 
 // use centralized error handling
 app.use(errorHandler);
