@@ -1,13 +1,18 @@
 .env
+.docker-compose.yaml.local
+.ignore.env-production
+docker-compose.yaml
 
 ./client/.next
 ./client/node_modules
 ./client/.env.example
 ./client/.env.local
+./client/.ignore.env.local
 ./client/.env
 
 ./server/dist
 ./server/node_modules
 ./server/.env.example
 ./server/.env.local
+./server/.ignore.env.local
 ./server/.env

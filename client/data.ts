@@ -25,6 +25,8 @@ export const TEXTS = {
   }
 };
 
+export const SourceOfCustomers = ["Google", "Youtube", "LinkedIn", "Instagram", "Facebook", "Others"]
+
 // nav links data
 export const navLinks = [
   {

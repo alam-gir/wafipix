@@ -26,8 +26,8 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent3: 28 100% 56%;
-    --accent3-foreground: 28 100% 56%;
+    --accent3: 43 100% 55%;
+    --accent3-foreground: 43 100% 55%;
 
     --accent2: 255 70% 48%;
     --accent2-foreground: 255 70% 48%;
@@ -116,9 +116,14 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  
 }
 
 @layer utilities {
+  .input {
+    @apply bg-transparent border-transparent border-b border-b-black rounded-none text-lg lg:text-xl px-0;
+  }
+  
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -128,4 +133,5 @@ body {
       -ms-overflow-style: none;  /* IE and Edge */
       scrollbar-width: none;  /* Firefox */
   }
+
 }

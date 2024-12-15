@@ -223,8 +223,6 @@ export const Service_Service = {
       if (tags.length) service.tags = tags;
       else service.tags = [];
 
-      console.log({tags, setTags: service.tags});
-
       return await service.save();
     } catch (error) {
       throw error;

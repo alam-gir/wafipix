@@ -24,8 +24,6 @@ export const fbPixelEventsController = {
       req
     );
 
-    console.log({ event });
-
     return res.status(200).json({ success: true, event });
   }),
 };

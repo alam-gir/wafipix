@@ -31,19 +31,23 @@ import ContactMessageSentDialog from "./contact-message-sent-dialog";
 import { useApiSend } from "@/lib/reactQuery";
 import { sendContactMail, TEmailForm } from "@/lib/URL-services/email";
 import Button2 from "@/components/global/buttons/button2";
+import { SourceOfCustomers } from "@/data";
 
 const ContactSchema = z.object({
-  name: z
+  fullName: z
     .string()
     .min(3, { message: "Name must be at least 3 characters long" })
     .max(20, { message: "Name must be at most 20 characters long" }),
+  companyName: z
+    .string().optional(),
   email: z.string().email({ message: "Invalid email address" }),
   phone: z.string().optional(),
-  zipCode: z.string({ message: "Zip code is required" }).min(1),
   sourceOfCustomer: z.string(),
-  message: z
+  projectBudget: z.number({required_error: "Please provide project budget"}).gt(1).default(100),
+  curreny: z.enum(["USD", "BDT"]).default("USD"),
+  projectDetails: z
     .string()
-    .min(10, { message: "Message must be at least 10 characters long" }),
+    .min(10, { message: "Please provide project details." }),
   isSubscribe: z.boolean().default(true),
 });
 
@@ -70,25 +74,28 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
     mode: "onSubmit",
     resolver: zodResolver(ContactSchema),
     defaultValues: {
-      name: "",
+      fullName: "",
+      companyName: "",
       email: "",
       phone: "",
-      zipCode: "",
       sourceOfCustomer: "google",
-      message: "",
+      projectBudget: 100,
+      curreny: "USD",
+      projectDetails: "",
       isSubscribe: true,
     },
   });
 
   const submitHandle = (data: z.infer<typeof ContactSchema>) => {
-    console.log(data);
     mutate({
-      name: data?.name,
+      fullName: data?.fullName,
+      companyName: data?.companyName,
       email: data?.email,
       phone: data?.phone,
-      zipCode: data?.zipCode,
       sourceOfCustomer: data?.sourceOfCustomer,
-      message: data?.message,
+      projectBudget: data?.projectBudget,
+      currency: data?.curreny,
+      projectDetails: data?.projectDetails,
       isSubscribe: data?.isSubscribe,
     });
   };
@@ -113,28 +120,38 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
     }
   }, [isSuccess, mutateData, form, isError, error, toast]);
 
+  const SourceOfCustomerSelectItems = SourceOfCustomers.map(item => {
+    return <SelectItem
+            key={item}
+            className="text-lg lg:text-xl"
+            value={item.toLowerCase()}
+          >
+            {item}
+          </SelectItem>
+  })
+
   return (
-    <div className="h-full w-full max-w-screen-sm">
+    <div className="h-full w-full max-w-screen-sm bg-white rounded-md p-8">
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(submitHandle)} className="space-y-6">
-          <div className="space-y-4">
+        <form onSubmit={form.handleSubmit(submitHandle)} className="space-y-8">
+          <div className="space-y-6">
             {/* Name field */}
             <FormField
               control={form.control}
-              name="name"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-lg lg:text-xl" htmlFor="name">
-                    Name
+                  <FormLabel className="text-lg lg:text-xl" htmlFor="fullName">
+                    Full Name
                   </FormLabel>
                   <FormControl>
                     <Input
-                      className="text-lg lg:text-xl"
+                      className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
                       {...field}
                       type="text"
-                      placeholder="First name & Last name"
-                      id="name"
-                      name="name"
+                      placeholder="Jane Cooper"
+                      id="fullName"
+                      name="fullName"
                     />
                   </FormControl>
                   <FormMessage />
@@ -142,7 +159,30 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
               )}
             />
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
+              {/* Company Name field */}
+            <FormField
+              control={form.control}
+              name="companyName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg lg:text-xl" htmlFor="companyName">
+                    Company Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
+                      {...field}
+                      type="text"
+                      placeholder="Ex. Tesla Inc"
+                      id="companyName"
+                      name="companyName"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
               {/* Email field */}
               <FormField
                 control={form.control}
@@ -154,7 +194,7 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className="text-lg lg:text-xl"
+                        className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
                         {...field}
                         type="email"
                         placeholder="example@mail.com"
@@ -166,50 +206,27 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
                   </FormItem>
                 )}
               />
+            </div>
 
+            <div className="flex flex-col md:flex-row gap-4">
+              
               {/* Phone field */}
               <FormField
                 control={form.control}
                 name="phone"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="w-full">
                     <FormLabel className="text-lg lg:text-xl" htmlFor="phone">
                       Phone
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className="text-lg lg:text-xl"
+                        className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
                         {...field}
                         type="tel"
-                        placeholder="01***********"
+                        placeholder="8801234-56789"
                         id="phone"
                         name="phone"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="flex gap-4">
-              {/* Zip code field */}
-              <FormField
-                control={form.control}
-                name="zipCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-lg lg:text-xl" htmlFor="zipCode">
-                      Zip Code
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        className="text-lg lg:text-xl"
-                        {...field}
-                        type="tel"
-                        placeholder="54321"
-                        id="zipCode"
-                        name="zipCode"
                       />
                     </FormControl>
                     <FormMessage />
@@ -234,46 +251,77 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="text-lg lg:text-xl">
+                        <SelectTrigger className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0">
                           <SelectValue id="sourceOfCustomer" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {SourceOfCustomerSelectItems}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            
+            <div className="grid grid-cols-2 gap-4">
+              {/* Prjoject Budget field */}
+            <FormField
+              control={form.control}
+              name="projectBudget"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-lg lg:text-xl" htmlFor="projectBudget">
+                    Project Budget
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
+                      {...field}
+                      type="number"
+                      id="projectBudget"
+                      name="projectBudget"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+              {/* Currency field */}
+              <FormField
+                control={form.control}
+                name="curreny"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel
+                      htmlFor="curreny"
+                      className="text-lg lg:text-xl"
+                    >
+                      Currency
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0">
+                          <SelectValue id="curreny" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         <SelectItem
                           className="text-lg lg:text-xl"
-                          value="google"
+                          value="USD"
                         >
-                          From google.
+                          USD
                         </SelectItem>
                         <SelectItem
                           className="text-lg lg:text-xl"
-                          value="youtube"
+                          value="BDT"
                         >
-                          From youtube.
-                        </SelectItem>
-                        <SelectItem
-                          className="text-lg lg:text-xl"
-                          value="facebook"
-                        >
-                          From facebook.
-                        </SelectItem>
-                        <SelectItem
-                          className="text-lg lg:text-xl"
-                          value="instagram"
-                        >
-                          From instagram.
-                        </SelectItem>
-                        <SelectItem
-                          className="text-lg lg:text-xl"
-                          value="twitter"
-                        >
-                          From twitter.
-                        </SelectItem>
-                        <SelectItem
-                          className="text-lg lg:text-xl"
-                          value="others"
-                        >
-                          From other sources.
+                          BDT
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -283,22 +331,22 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
               />
             </div>
 
-            {/* message  field */}
+            {/* Project details  field */}
             <FormField
               control={form.control}
-              name="message"
+              name="projectDetails"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-lg lg:text-xl" htmlFor="message">
-                    Message
+                  <FormLabel className="text-lg lg:text-xl" htmlFor="projectDetails">
+                    Project Details
                   </FormLabel>
                   <FormControl>
                     <Textarea
-                      className="text-lg lg:text-xl"
-                      placeholder="Tell us what you're looking for..."
+                      className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
+                      placeholder="Tell us about your project..."
                       {...field}
-                      id="message"
-                      name="message"
+                      id="projectDetails"
+                      name="projectDetails"
                     />
                   </FormControl>
                   <FormMessage />

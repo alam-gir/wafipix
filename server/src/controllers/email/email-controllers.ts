@@ -6,29 +6,35 @@ import { fbPixelEventsService } from "../../services/fb-pixel-events-service";
 
 export const emailController = {
   sendContactMail: asyncHandler(async (req: Request, res: Response) => {
-    const { name, email, phone, message, sourceOfCustomer, zipCode, isSubscribe } =
+    const { fullName, companyName, email, phone, sourceOfCustomer, projectBudget, currency, projectDetails, isSubscribe } =
       req.body as {
-        name: string;
+        fullName: string;
+        companyName?: string;
         email: string;
-        phone: string;
-        message: string;
+        phone?: string;
         sourceOfCustomer: string;
-        zipCode: string;
+        projectBudget: number;
+        currency: "USD" | "BDT";
+        projectDetails: string;
         isSubscribe: boolean;
-      };
+      }
+    ;
 
-    if (!name) throw new ApiError("Name is required!", 404);
+    if (!fullName) throw new ApiError("Name is required!", 404);
     if (!email) throw new ApiError("Email is required!", 404);
-    if (!message) throw new ApiError("message is required!", 404);
-    if (!zipCode) throw new ApiError("Zip code is required!", 404);
+    if (!projectBudget) throw new ApiError("Project details is required!", 404);
+    if (!projectDetails) throw new ApiError("Project details is required!", 404);
+    if (!currency) throw new ApiError("Currency is required!", 404);
 
-    const emailText = getContactEmailText(
-      name,
+    const emailText = getEmailTextOfContact(
+      fullName,
+      companyName || "Not given",
       email,
-      phone,
-      message,
+      phone || "Not given",
       sourceOfCustomer,
-      zipCode,
+      projectBudget,
+      currency,
+      projectDetails,
       isSubscribe
     );
 
@@ -39,11 +45,11 @@ export const emailController = {
     });
 
     const contactEventPromise = fbPixelEventsService.contactEvent(
-      name,
+      fullName,
       email,
-      phone,
+      phone || "",
       sourceOfCustomer,
-      zipCode,
+      "",
       isSubscribe,
       req
     );
@@ -57,32 +63,36 @@ export const emailController = {
   }),
 };
 
-function getContactEmailText(
+function getEmailTextOfContact (
   name: string,
+  company: string,
   email: string,
   phone: string,
-  message: string,
-  sourceOfCustomer: string,
-  zipCode: string,
-  isSubscribe: boolean
+  source: string,
+  projectBudget: number,
+  currency: string,
+  projectDetails: string,
+  isSubscribe?: boolean
 ) {
   return `
-    Client Details \n
-    --------------------------------------------\n
-    name: ${name} \n
-    email: ${email} \n
-    phone: ${phone ? phone : "not given"} \n\n
-    email: ${zipCode} \n
+  Client \n
+  --------------------------------------------\n
+  name: ${name} \n
+  company name: ${company} \n
+  email: ${email} \n
+  phone: ${phone} \n\n
 
-    Text message \n
-    --------------------------------------------\n
-    ${message} \n\n
+  Project \n
+  --------------------------------------------\n
+  project budget : ${projectBudget} ${currency} \n
+  project detials : \n
+  ${projectDetails} \n\n
 
-    Others \n
-    --------------------------------------------\n
-    source of customer: ${sourceOfCustomer}\n
-    subscribe newsletter: ${isSubscribe ? "Yes" : "No"}\n\n\n
+  Others \n
+  --------------------------------------------\n
+  source of customer: ${source}\n
+  subscribe newsletter: ${isSubscribe ? "Yes" : "No"}\n\n\n
 
-    This message is from wafipix.com sent by ${name}.
-    `;
+  This message is from wafipix.com sent by ${name}.
+  `;
 }

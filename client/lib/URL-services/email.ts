@@ -1,10 +1,12 @@
 export type TEmailForm = {
-    name: string;
+    fullName: string;
+    companyName?: string;
     email: string;
     phone?: string;
-    zipCode: string;
     sourceOfCustomer: string;
-    message: string;
+    projectBudget: number;
+    currency: "USD" | "BDT";
+    projectDetails: string;
     isSubscribe: boolean;
   }
 
@@ -15,7 +17,7 @@ export const sendContactMail = async (data: TEmailForm) => {
             url: "/email/contact",
             method: 'POST',
             data: JSON.stringify(data),
-            headers: {
+            headers: {  
                 "Content-Type": "application/json"
             }
         })
