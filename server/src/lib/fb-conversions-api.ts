@@ -90,7 +90,6 @@ class FBConversionsAPI {
     return this.eventRequest(eventName, userData, customData, sourceUrl)
       .execute()
       .then(ev =>{
-        console.log( eventName + " - Event sent: ", ev);
         // console. event name
         return ev;
       })

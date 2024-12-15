@@ -41,8 +41,6 @@ const AddFeatureField: FC<AddFeatureFieldProps> = ({ onChange, initialFeatures =
     setValue(target.value);
   };
 
-  console.log("rendering AddFeatureField", initialFeatures);
-
   return (
     <div className="space-y-2">
       <div className="space-y-1">

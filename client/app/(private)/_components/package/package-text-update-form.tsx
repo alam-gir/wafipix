@@ -78,8 +78,6 @@ const PackageTextUpdateForm: FC<PackageTextUpdateFormProps> = ({
     form.reset(initialPackageTexts);
   };
 
-  console.log({initialPackageTexts, packageTexts})
-
   const isUpdateAvailable = !isSame(initialPackageTexts, form.watch());
 
   // RESULT EFFECT

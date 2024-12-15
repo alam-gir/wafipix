@@ -24,8 +24,6 @@ const PackageFormContainer: FC<PackageFormContainerProps> = ({ id }) => {
     enabled: !!id,
   });
 
-  console.log(data);
-
   if (isLoading) return <SectionLoader className="min-h-96" />;
   if (!data) return NoContentField("No package found for package id - " + id);
   return (

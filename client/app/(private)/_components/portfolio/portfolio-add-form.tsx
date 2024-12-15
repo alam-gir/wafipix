@@ -60,8 +60,6 @@ const PortfolioAddForm: FC<PortfolioAddFormProps> = ({}) => {
   const submitHandler = (data: z.infer<typeof PortfolioSchema>) => {
     mutate(data);
   };
-
-  console.log({data, isPending, isError, isSuccess, error})
   
   // RESULT EFFECT
   useEffect(() => {

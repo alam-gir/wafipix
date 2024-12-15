@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const data = { sub, email, name, picture, email_verified };
 
         const url = `${API_BASE_URL}/auth/login/google`;
+        console.log({urlFromAuthJs:url})
 
         try {
           const response = await fetch(url, {
