@@ -14,11 +14,7 @@ const PackageCard: FC<PackageCardProps> = ({ pkg }) => {
   // const isOffer = pkg.offer.active && pkg.offer.perchentage ? true : false;
 
   return (
-    <div className="relative overflow-hidden h-full w-full p-10 lg:p-12 flex flex-col gap-4 from-accent3 via-accent4 to-accent4 bg-gradient-to-br backdrop-blur-3xl rounded-2xl">
-      {/* Offer badge */}
-      {/* {isOffer ? <div className="h-10 w-1/2 flex items-center justify-center absolute top-[5%] -left-[12.5%] bg-primary-foreground -rotate-45">
-        <h1 className="text-xl font-semibold text-primary/80">{pkg.offer.perchentage + "% Discount"}</h1>
-      </div> : null} */}
+    <div className="relative overflow-hidden h-full w-full p-10 lg:p-12 flex flex-col gap-4 bg-white border backdrop-blur-3xl drop-shadow-lg rounded-2xl">
 
       {/* title descrition & price */}
       <div className="flex flex-col md:flex-row lg:flex-col md:border-b md:border-primary/10 lg:border-none md:pb-4 lg:pb-0">
@@ -31,7 +27,7 @@ const PackageCard: FC<PackageCardProps> = ({ pkg }) => {
               {pkg.description}
             </p>
           </div>
-          <h2 className="p-2 text-primary/60 font-semibold tracking-wide bg-accent4/80 rounded-xl drop-shadow-xl">
+          <h2 className="p-2 text-accent4/60 font-semibold tracking-wide bg-accent/80 rounded-xl drop-shadow-xl w-fit px-4">
             {pkg.service.title}
           </h2>
         </div>

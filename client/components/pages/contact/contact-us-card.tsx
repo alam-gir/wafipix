@@ -11,16 +11,16 @@ interface ContactUsCardProps {}
 const ContactUsCard: FC<ContactUsCardProps> = ({}) => {
   return (
     <WidthWrapper>
-      <div className="h-fit w-full flex flex-col lg:flex-row lg:justify-between overflow-hidden from-accent4 to-accent4/70 bg-gradient-to-br lg:bg-gradient-to-br rounded-lg] space-y-8 lg:space-y-0 rounded-2xl">
+      <div className="h-fit w-full flex flex-col lg:flex-row lg:justify-between overflow-hidden from-accent3 to-accent4/70 bg-gradient-to-br lg:bg-gradient-to-br rounded-lg] space-y-8 lg:space-y-0 rounded-2xl">
         <div className="space-y-4 p-4 pt-8 lg:px-12 lg:py-16 h-full w-full">
           <div className="text-center lg:text-left">
-            <h3 className="uppercase text-subHead lg:text-subHeadLg text-muted-foreground font-semibold">
+            <h3 className="uppercase text-subHead lg:text-subHeadLg text-muted font-semibold">
               let's work together
             </h3>
-            <h1 className="capitalize font-bold text-head lg:text-headLg text-primary">
+            <h1 className="capitalize font-bold text-head lg:text-headLg text-primary-foreground">
               Contact Us
             </h1>
-            <p className="mt-4 capitalize text-subHead lg:text-subHeadLg tracking-wide text-primary/80 flex justify-center lg:flex-col">
+            <p className="mt-4 capitalize text-subHead lg:text-subHeadLg tracking-wide text-primary-foreground/80 flex justify-center lg:flex-col">
               <span>know what you want? Great.</span>
               <span>Got questions? Even better.</span>
             </p>
@@ -32,7 +32,7 @@ const ContactUsCard: FC<ContactUsCardProps> = ({}) => {
               icon={<ArrowRight />}
               iconPosition="right"
               size={"lg"}
-              className="w-full lg:w-96"
+              className="w-full lg:w-96 drop-shadow-lg "
             />
           </div>
         </div>

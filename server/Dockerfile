@@ -1,29 +1,23 @@
-# Stage : install dependency
-
+# Stage: install dependencies
 FROM node:lts AS base
 
 WORKDIR /app
 
-COPY . .
-
+COPY package*.json ./
 RUN npm install
 
+COPY . .
 RUN npm run build
 
-COPY . .
-
-# Stage : build
-
-FROM node:20-alpine AS build
+# Stage: production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
-COPY --from=base /app/node_modules ./node_modules/
-
 COPY --from=base /app/dist ./dist
-
-COPY package*.json tsconfig.json ./
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/package*.json ./
 
 EXPOSE 3001
 
-CMD npm run start
+CMD ["npm", "start"]

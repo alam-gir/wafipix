@@ -8,8 +8,8 @@
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
-    --background2: 34 93% 94%;
-    --foreground2: 222.2 84% 4.9%;
+    --background2: 220 15% 95%;
+    --foreground2: 220 15% 95%;
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
@@ -26,17 +26,17 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent3: 43 100% 55%;
-    --accent3-foreground: 43 100% 55%;
+    --accent3: 208 100% 50%;
+    --accent3-foreground: 208 100% 50%;
 
-    --accent2: 255 70% 48%;
-    --accent2-foreground: 255 70% 48%;
+    --accent2: 208 100% 50%;
+    --accent2-foreground: 208 100% 50%;
 
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
-    --accent4: 43 100% 62%;
-    --accent4-foreground: 43 100% 62%;
+    --accent4: 213 100% 33%;
+    --accent4-foreground: 213 100% 33%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
