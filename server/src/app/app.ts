@@ -31,7 +31,7 @@ app.use(express.text());
 
 // hello
 app.get("/", (req: Request, res: Response) => {
-    res.status(200).json({message: "Hello from server of wafipix v2."})
+    res.status(200).json({message: "Hello from server of wafipix v2 updated."})
 })
 
 // all routes ---------------

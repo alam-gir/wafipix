@@ -1,5 +1,6 @@
 services:
   client:
+    image: wafipix-client:latest
     build:
       context: ./client
       dockerfile: Dockerfile
@@ -24,6 +25,7 @@ services:
       - wafipix_network
   
   server:
+    image: wafipix-server:latest
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -44,7 +46,10 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_HOST=${EMAIL_HOST}
       - CONTACT_MAIL=${CONTACT_MAIL}
+      - FB_CONVERSIONS_API_ACCESS_TOKEN={FB_CONVERSIONS_API_ACCESS_TOKEN}
+      - FB_CONVERSIONS_API_PIXEL_ID=[FB_CONVERSIONS_API_PIXEL_ID]
 
     networks:
       - wafipix_network

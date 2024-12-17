@@ -68,13 +68,13 @@ const DashboardMenuSection: FC = () => {
         isCollapsed={false}
       />
       <MenuItem
-        href="/dashboard/social-informations"
+        href="/dashboard/social-info"
         icon={<Globe />}
         label="Manage Social-Informations"
         isCollapsed={false}
       />
       <MenuItem
-        href="/dashboard/contact-informations"
+        href="/dashboard/contact-info"
         icon={<MapPin />}
         label="Manage Contact-Informations"
         isCollapsed={false}

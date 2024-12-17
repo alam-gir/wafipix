@@ -13,7 +13,7 @@ interface NavbarProps { }
 const Navbar: FC<NavbarProps> = ({ }) => {
 
   return (
-    <nav className="h-16 lg:h-20 w-full z-50 flex items-center justify-center fixed top-0 from-accent3/60 to-background2 via-background2 bg-gradient-to-br backdrop-blur-lg">
+    <nav className="h-16 lg:h-20 w-full z-50 flex items-center justify-center fixed top-0 from-accent3/20 to-background2 via-background2 bg-gradient-to-br backdrop-blur-lg">
       <WidthWrapper>
         <div className=" flex gap-8 items-center justify-between h-full w-full text-primary">
 
