@@ -280,6 +280,9 @@ const ContactForm: FC<ContactFormProps> = ({}) => {
                     <Input
                       className="input focus-visible:ring-0 focus-visible:outline-none focus-visible:ring-offset-0"
                       {...field}
+                      onChange={e => {
+                        field.onChange(parseInt(e.target.value))
+                      }}
                       type="number"
                       id="projectBudget"
                       name="projectBudget"
